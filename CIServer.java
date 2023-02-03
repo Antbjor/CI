@@ -38,6 +38,6 @@ public class CIServer {
 
     public static void main(String[] args) {
         CIServer server=new CIServer();
-        server.start(8030);
+        server.start(1337);
     }
 }

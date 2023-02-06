@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import yaml
+import json
 
 class CIServer(BaseHTTPRequestHandler):
     def response(self):
@@ -8,22 +9,40 @@ class CIServer(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        print("GET")
-        print(self.path)
         print(self.headers)
         self.response()
-        #self.wfile.write("GET requeaaaast for {}".format(self.path).encode('utf-8'))
 
     def do_POST(self):
-        content_length = int(self.headers['Content-Length']) 
-        post_data = self.rfile.read(content_length) 
-        print("POST")
-        print(self.path)
-        print(self.headers)
-        print(str(post_data.decode('utf-8')))
-
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+        event = self.parse_header(self.headers)
+        commit_id, clone_url = self.parse_payload(post_data.decode('utf-8'))
+        self.clone_repo(event, commit_id, clone_url)
         self.response()
-        #self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+
+    def parse_header(self, header):
+        if 'X-Github-Event' in header:
+            event = header['X-Github-Event']
+        else:
+            event = "Unknown event"
+        return event
+
+    def parse_payload(self, payload):
+        try:
+            payload = json.loads(payload)
+            commit_id = payload["after"]
+            clone_url = payload["repository"]["clone_url"]
+            return commit_id, clone_url
+        except:
+            print("Exception when trying to parse POST payload.")
+
+    def clone_repo(self, event, commit_id, clone_url):
+        """ 
+        TODO 
+        Do the continous integration tasks,
+        1. clone the repo..
+        2. compile the code..
+        """
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
     server_address = ('', port)

@@ -1,4 +1,6 @@
 import socket
+import yaml
+
 
 class CIServer:
     def __init__(self, port):
@@ -18,5 +20,8 @@ class CIServer:
         print(data) 
 
 
-server = CIServer(port=8030)
+with open('config.yml') as fin:
+    data = yaml.load(fin, Loader=yaml.FullLoader)
+PORT = data["PORT"]
+server = CIServer(PORT)
 server.connection()

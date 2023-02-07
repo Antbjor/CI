@@ -3,10 +3,11 @@ import yaml
 import json
 
 class CIServer(BaseHTTPRequestHandler):
-    def response(self):
+    def response(self, message):
         self.send_response(200)
-        self.send_header('Content-type', 'text/html')
+        self.send_header('Content-type', 'text/plain')
         self.end_headers()
+        self.wfile.write(bytes(message, "utf-8"))
 
     def do_GET(self):
         print(self.headers)
@@ -17,8 +18,8 @@ class CIServer(BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length)
         event = self.parse_header(self.headers)
         commit_id, clone_url = self.parse_payload(post_data.decode('utf-8'))
+        self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
         self.clone_repo(event, commit_id, clone_url)
-        self.response()
 
     def parse_header(self, header):
         if 'X-Github-Event' in header:

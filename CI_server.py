@@ -37,7 +37,7 @@ class CIServerHelper():
             clone_url = payload["repository"]["clone_url"]
             return commit_id, clone_url
         except:
-            print("Exception when trying to parse POST payload.")
+            return "Unknown commit", "Unknown url" 
 
     def clone_repo(self, event, commit_id, clone_url):
         """ 

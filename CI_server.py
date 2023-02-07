@@ -1,6 +1,9 @@
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import yaml
 import json
+import git
+
 
 class CIServer(BaseHTTPRequestHandler):
     def response(self, message):
@@ -17,9 +20,9 @@ class CIServer(BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
         event = self.parse_header(self.headers)
-        commit_id, clone_url = self.parse_payload(post_data.decode('utf-8'))
+        commit_id, clone_url, repo_name = self.parse_payload(post_data.decode('utf-8'))
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
-        self.clone_repo(event, commit_id, clone_url)
+        self.clone_repo(clone_url, repo_name)
 
     def parse_header(self, header):
         if 'X-Github-Event' in header:
@@ -33,17 +36,29 @@ class CIServer(BaseHTTPRequestHandler):
             payload = json.loads(payload)
             commit_id = payload["after"]
             clone_url = payload["repository"]["clone_url"]
-            return commit_id, clone_url
+            repo_name = payload["repository"]["name"]
+
+            return commit_id, clone_url, repo_name
         except:
             print("Exception when trying to parse POST payload.")
 
-    def clone_repo(self, event, commit_id, clone_url):
-        """ 
-        TODO 
-        Do the continous integration tasks,
-        1. clone the repo..
-        2. compile the code..
-        """
+    def clone_repo(self, clone_url, repo_name):
+        dir_path = os.path.realpath(__file__)
+        dir_name = os.path.dirname(dir_path)
+        #repo_path = os.path.join(dir_name, repo_name)
+
+        try:
+            repo = git.Repo(dir_name)
+            #repo = git.Repo(repo_path)
+        except(git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
+            repo = None
+
+        if repo is not None:
+            for remote in repo.remotes:
+                remote.fetch()
+        else:
+            git.Repo.clone_from(clone_url, repo_name)
+
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
     server_address = ('', port)
@@ -55,6 +70,7 @@ def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
         pass
     server.server_close()
     print('Stopping server\n')
+
 
 if __name__ == '__main__':
     with open('config.yml') as fin:

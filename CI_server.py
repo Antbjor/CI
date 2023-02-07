@@ -56,8 +56,11 @@ def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
     server.server_close()
     print('Stopping server\n')
 
-if __name__ == '__main__':
+def main():
     with open('config.yml') as fin:
         data = yaml.load(fin, Loader=yaml.FullLoader)
     PORT = data["PORT"]
     run(port=PORT)
+
+if __name__ == '__main__':
+    main()

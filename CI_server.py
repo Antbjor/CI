@@ -14,13 +14,15 @@ class CIServer(BaseHTTPRequestHandler):
         self.response()
 
     def do_POST(self):
+        CI = CIServerHelper()
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
-        event = self.parse_header(self.headers)
-        commit_id, clone_url = self.parse_payload(post_data.decode('utf-8'))
+        event = CI.parse_header(self.headers)
+        commit_id, clone_url = CI.parse_payload(post_data.decode('utf-8'))
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
-        self.clone_repo(event, commit_id, clone_url)
+        CI.clone_repo(event, commit_id, clone_url)
 
+class CIServerHelper():
     def parse_header(self, header):
         if 'X-Github-Event' in header:
             event = header['X-Github-Event']

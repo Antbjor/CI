@@ -10,7 +10,8 @@ No security checks are performed.
 TODO
 
 ### Testing
-TODO
+The file `CI_server_test.py` contains various tests that can be run.
+To run the test cases on the code, run `python -m unittest CI_server_test.py` from the main directory.
 
 ### Running
 TODO

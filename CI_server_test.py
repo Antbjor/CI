@@ -2,7 +2,11 @@ import unittest
 import CI_server
 import requests
 from threading import Thread, Event
+import os
+import shutil
+import git
 from http.server import BaseHTTPRequestHandler, HTTPServer
+
 
 class StoppableThread(Thread):
     """
@@ -18,6 +22,7 @@ class StoppableThread(Thread):
 
     def stopped(self):
         return self._stop_event.is_set()
+
 
 class CIServerTest(unittest.TestCase):
     def test_get_response(self):
@@ -54,30 +59,40 @@ class CIServerTest(unittest.TestCase):
         event = server.parse_header(header)
         
         self.assertEqual(event, "push")
-    
-    def test_payload_no_repository(self):
-        """
-        Test case to see if parsing payload works as expected when tags are missing
-        Expected response is 'unknown commit' and 'unknown url'
-        """
-        server = CI_server.CIServerHelper()
-        payload = """{"after": "7a57079aa"}"""
-        commit, url = server.parse_payload(payload)
-        
-        self.assertEqual(commit, "Unknown commit")
-        self.assertEqual(url, "Unknown url")
 
-    def test_payload(self):
+
+    def test_clone_repo(self):
         """
-        Test case to see if parsing payload works as expected
-        Expected response is '11fb5236834be4e' and 'https://github.com/DD2480-group30/CI.git'
+        Test case to see if cloning repo work as expected.
+        Expected outcome is to see that the git working_dir is found locally
+        after the function is run.
         """
         server = CI_server.CIServerHelper()
-        payload = """{"after": "11fb5236834be4e", "repository": {"name": "CI", "clone_url": "https://github.com/DD2480-group30/CI.git"}}"""
-        commit, url = server.parse_payload(payload)
-        
-        self.assertEqual(commit, "11fb5236834be4e")
-        self.assertEqual(url, "https://github.com/DD2480-group30/CI.git")
-        
+        clone_url = "https://github.com/githubtraining/hellogitworld.git"
+        branch = "master"
+        repo_path = server.clone_repo(clone_url, branch).working_dir
+
+        self.assertTrue(os.path.exists(repo_path))
+        # Remove directory after testing
+        shutil.rmtree(repo_path)
+
+
+    def test_clone_repo_branch(self):
+        """
+        Test case to see if cloning repo and switching branch works as expected.
+        Expected outcome is to see that a file that only exists in a specific branch
+        can be found locally after the function is run.
+        """
+        server = CI_server.CIServerHelper()
+        clone_url = "https://github.com/githubtraining/hellogitworld.git"
+        branch = "gh-pages"
+        repo_path = server.clone_repo(clone_url, branch).working_dir
+        file_path = repo_path + "/index.html"
+
+        self.assertTrue(os.path.isfile(file_path))
+        # Remove directory after testing
+        shutil.rmtree(repo_path)
+
+
 if __name__ == '__main__':
     unittest.main()

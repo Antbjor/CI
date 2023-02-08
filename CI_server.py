@@ -1,8 +1,8 @@
-import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import os
+import git
 import yaml
 import json
-import git
 
 
 class CIServer(BaseHTTPRequestHandler):
@@ -24,9 +24,10 @@ class CIServer(BaseHTTPRequestHandler):
         commit_id, clone_url, repo_name, branch = CI.parse_payload(post_data.decode('utf-8'))
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
         CI.clone_repo(clone_url, branch)
+        # ADD ci_build() here. (will return a tuple)
 
 
-class CIServerHelper():
+class CIServerHelper:
     def parse_header(self, header):
         if 'X-Github-Event' in header:
             event = header['X-Github-Event']
@@ -44,7 +45,7 @@ class CIServerHelper():
 
             return commit_id, clone_url, repo_name, branch
         except:
-            return "Unknown commit", "Unknown url" 
+            return "Unknown commit", "Unknown url"
 
     def clone_repo(self, clone_url, branch):
         dir_path = os.path.realpath(__file__)
@@ -62,6 +63,11 @@ class CIServerHelper():
             git.Repo.clone_from(clone_url, repo_path)
 
         repo.git.checkout(branch)
+        return  # an absolute/full path of the repo (will be updated)
+
+    def ci_build(self):
+        # TODO: read from .sh file and return the result as a tuple
+        return  # (True/False, string)
 
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):

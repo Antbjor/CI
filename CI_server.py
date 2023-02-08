@@ -61,9 +61,11 @@ class CIServerHelper:
             repo.remotes.origin.fetch()
         else:
             git.Repo.clone_from(clone_url, repo_path)
+            repo = git.Repo(repo_path)
 
         repo.git.checkout(branch)
-        return  # an absolute/full path of the repo (will be updated)
+
+        return repo
 
     def ci_build(self):
         # TODO: read from .sh file and return the result as a tuple

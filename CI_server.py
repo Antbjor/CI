@@ -6,7 +6,7 @@ import git
 
 
 class CIServer(BaseHTTPRequestHandler):
-    def response(self, message):
+    def response(self, message="Default"):
         self.send_response(200)
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
@@ -17,13 +17,16 @@ class CIServer(BaseHTTPRequestHandler):
         self.response()
 
     def do_POST(self):
+        CI = CIServerHelper()
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
-        event = self.parse_header(self.headers)
-        commit_id, clone_url, repo_name, branch = self.parse_payload(post_data.decode('utf-8'))
+        event = CI.parse_header(self.headers)
+        commit_id, clone_url, repo_name, branch = CI.parse_payload(post_data.decode('utf-8'))
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
-        self.clone_repo(clone_url, branch)
+        CI.clone_repo(clone_url, branch)
 
+
+class CIServerHelper():
     def parse_header(self, header):
         if 'X-Github-Event' in header:
             event = header['X-Github-Event']
@@ -41,7 +44,7 @@ class CIServer(BaseHTTPRequestHandler):
 
             return commit_id, clone_url, repo_name, branch
         except:
-            print("Exception when trying to parse POST payload.")
+            return "Unknown commit", "Unknown url" 
 
     def clone_repo(self, clone_url, branch):
         dir_path = os.path.realpath(__file__)
@@ -60,6 +63,7 @@ class CIServer(BaseHTTPRequestHandler):
 
         repo.git.checkout(branch)
 
+
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
     server_address = ('', port)
     server = server_class(server_address, handler_class)
@@ -72,8 +76,12 @@ def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
     print('Stopping server\n')
 
 
-if __name__ == '__main__':
+def main():
     with open('config.yml') as fin:
         data = yaml.load(fin, Loader=yaml.FullLoader)
     PORT = data["PORT"]
     run(port=PORT)
+
+
+if __name__ == '__main__':
+    main()

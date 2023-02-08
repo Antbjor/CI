@@ -20,9 +20,9 @@ class CIServer(BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
         event = self.parse_header(self.headers)
-        commit_id, clone_url, repo_name = self.parse_payload(post_data.decode('utf-8'))
+        commit_id, clone_url, repo_name, branch = self.parse_payload(post_data.decode('utf-8'))
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
-        self.clone_repo(clone_url, repo_name)
+        self.clone_repo(clone_url, branch)
 
     def parse_header(self, header):
         if 'X-Github-Event' in header:
@@ -36,29 +36,29 @@ class CIServer(BaseHTTPRequestHandler):
             payload = json.loads(payload)
             commit_id = payload["after"]
             clone_url = payload["repository"]["clone_url"]
+            branch = payload["ref"].replace("refs/heads/", "")
             repo_name = payload["repository"]["name"]
 
-            return commit_id, clone_url, repo_name
+            return commit_id, clone_url, repo_name, branch
         except:
             print("Exception when trying to parse POST payload.")
 
-    def clone_repo(self, clone_url, repo_name):
+    def clone_repo(self, clone_url, branch):
         dir_path = os.path.realpath(__file__)
         dir_name = os.path.dirname(dir_path)
-        #repo_path = os.path.join(dir_name, repo_name)
+        repo_path = os.path.join(dir_name, "CI-clonedir")
 
         try:
-            repo = git.Repo(dir_name)
-            #repo = git.Repo(repo_path)
+            repo = git.Repo(repo_path)
         except(git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
             repo = None
 
         if repo is not None:
-            for remote in repo.remotes:
-                remote.fetch()
+            repo.remotes.origin.fetch()
         else:
-            git.Repo.clone_from(clone_url, repo_name)
+            git.Repo.clone_from(clone_url, repo_path)
 
+        repo.git.checkout(branch)
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
     server_address = ('', port)

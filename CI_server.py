@@ -1,5 +1,7 @@
 import socketserver
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import os
+import git
 import yaml
 import json
 
@@ -27,11 +29,14 @@ class CIServer(BaseHTTPRequestHandler):
         self.payload = json.loads(post_data.decode('utf-8'))
         commit_id = self.payload["after"]
         clone_url = self.payload["repository"]["clone_url"]
+        repo_name = self.payload["repository"]["name"]
+        branch = self.payload["ref"].replace("refs/heads/", "")
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
-        CI.clone_repo(event, commit_id, clone_url)
+        CI.clone_repo(clone_url, branch)
+        # ADD ci_build() here. (will return a tuple)
 
 
-class CIServerHelper():
+class CIServerHelper:
     def parse_header(self, header):
         if 'X-Github-Event' in header:
             event = header['X-Github-Event']
@@ -39,13 +44,31 @@ class CIServerHelper():
             event = "Unknown event"
         return event
 
-    def clone_repo(self, event, commit_id, clone_url):
-        """ 
-        TODO 
-        Do the continous integration tasks,
-        1. clone the repo..
-        2. compile the code..
-        """
+    def clone_repo(self, clone_url, branch):
+        dir_path = os.path.realpath(__file__)
+        dir_name = os.path.dirname(dir_path)
+        repo_path = os.path.join(dir_name, "CI-clonedir")
+
+        try:
+            repo = git.Repo(repo_path)
+        except(git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
+            repo = None
+
+        if repo is not None:
+            repo.remotes.origin.fetch()
+        else:
+            git.Repo.clone_from(clone_url, repo_path)
+            repo = git.Repo(repo_path)
+
+        repo.git.checkout(branch)
+
+        return repo
+
+    def ci_build(self):
+        # TODO: read from .sh file and return the result as a tuple
+        return  # (True/False, string)
+
+
 
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):

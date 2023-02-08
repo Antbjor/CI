@@ -7,6 +7,7 @@ import shutil
 import git
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+
 class StoppableThread(Thread):
     """
     Thread class with a stop() method. The thread itself has to check
@@ -58,30 +59,7 @@ class CIServerTest(unittest.TestCase):
         event = server.parse_header(header)
         
         self.assertEqual(event, "push")
-    
-    def test_payload_no_repository(self):
-        """
-        Test case to see if parsing payload works as expected when tags are missing
-        Expected response is 'unknown commit' and 'unknown url'
-        """
-        server = CI_server.CIServerHelper()
-        payload = """{"after": "7a57079aa"}"""
-        commit, url = server.parse_payload(payload)
-        
-        self.assertEqual(commit, "Unknown commit")
-        self.assertEqual(url, "Unknown url")
 
-    def test_payload(self):
-        """
-        Test case to see if parsing payload works as expected
-        Expected response is '11fb5236834be4e' and 'https://github.com/DD2480-group30/CI.git'
-        """
-        server = CI_server.CIServerHelper()
-        payload = """{"after": "11fb5236834be4e", "repository": {"name": "CI", "clone_url": "https://github.com/DD2480-group30/CI.git"}}"""
-        commit, url = server.parse_payload(payload)
-        
-        self.assertEqual(commit, "11fb5236834be4e")
-        self.assertEqual(url, "https://github.com/DD2480-group30/CI.git")
 
     def test_clone_repo(self):
         """
@@ -115,6 +93,6 @@ class CIServerTest(unittest.TestCase):
         # Remove directory after testing
         shutil.rmtree(repo_path)
 
-        
+
 if __name__ == '__main__':
     unittest.main()

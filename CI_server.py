@@ -1,3 +1,4 @@
+import socketserver
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import git
@@ -6,6 +7,10 @@ import json
 
 
 class CIServer(BaseHTTPRequestHandler):
+    def __init__(self, request: bytes, client_address: tuple[str, int], server: socketserver.BaseServer):
+        super().__init__(request, client_address, server)
+        self.payload = []
+
     def response(self, message="Default"):
         self.send_response(200)
         self.send_header('Content-type', 'text/plain')
@@ -21,7 +26,11 @@ class CIServer(BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
         event = CI.parse_header(self.headers)
-        commit_id, clone_url, repo_name, branch = CI.parse_payload(post_data.decode('utf-8'))
+        self.payload = json.loads(post_data.decode('utf-8'))
+        commit_id = self.payload["after"]
+        clone_url = self.payload["repository"]["clone_url"]
+        repo_name = self.payload["repository"]["name"]
+        branch = self.payload["ref"].replace("refs/heads/", "")
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
         CI.clone_repo(clone_url, branch)
         # ADD ci_build() here. (will return a tuple)
@@ -34,18 +43,6 @@ class CIServerHelper:
         else:
             event = "Unknown event"
         return event
-
-    def parse_payload(self, payload):
-        try:
-            payload = json.loads(payload)
-            commit_id = payload["after"]
-            clone_url = payload["repository"]["clone_url"]
-            branch = payload["ref"].replace("refs/heads/", "")
-            repo_name = payload["repository"]["name"]
-
-            return commit_id, clone_url, repo_name, branch
-        except:
-            return "Unknown commit", "Unknown url"
 
     def clone_repo(self, clone_url, branch):
         dir_path = os.path.realpath(__file__)
@@ -70,6 +67,8 @@ class CIServerHelper:
     def ci_build(self):
         # TODO: read from .sh file and return the result as a tuple
         return  # (True/False, string)
+
+
 
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):

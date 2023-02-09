@@ -175,8 +175,7 @@ class CIServerHelper:
                     # Return at once if build fails (ruff print the error message in stdout)
                     if result.stdout != "":
                         return False, result.stdout
-            # Run tests after passing lint
-            elif job["name"] == 'Build project':
+            elif job["name"] == 'Build project' or job["name"] == 'Install dependencies':
                 for task in tasks:
                     # Execute the shell commands
                     result = subprocess.run(task, shell=True, text=True,
@@ -219,7 +218,6 @@ class CIServerHelper:
                     # Return at once if build fails
                     if result.stdout != "":
                         return False, result.stdout
-            # Run tests after passing lint
             elif job["name"] == 'Run tests':
                 for task in tasks:
                     # Execute the shell commands
@@ -229,6 +227,16 @@ class CIServerHelper:
                     print(result.stdout)
                     # Return at once if build fails (E: File Error F: Test Failed)
                     if result.stderr[0] == 'E' or result.stderr[0] == 'F':
+                        return False, result.stderr
+            elif job["name"] == 'Install dependencies':
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Print the output of the shell commands
+                    print(result.stdout)
+                    # Return at once if build fails
+                    if result.stderr != "":
                         return False, result.stderr
             else:
                 print("ERROR:", "Unrecognized job name!", file=sys.stderr)

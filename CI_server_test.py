@@ -79,8 +79,9 @@ class CIServerTest(unittest.TestCase):
 
 
     def test_clone_repo_branch(self):
+
         """
-        Test case to see if cloning repo and switching branch works as exspected.
+        Test case to see if cloning repo and switching branch works as expected.
         Expected outcome is to see that a file that only exists in a specific branch
         can be found locally after the function is run.
         """

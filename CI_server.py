@@ -1,14 +1,17 @@
-import socketserver
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import git
 import yaml
 import json
 import requests
+import subprocess
+import socketserver
+from typing import Tuple
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
 
 
 class CIServer(BaseHTTPRequestHandler):
-    def __init__(self, request: bytes, client_address: tuple[str, int], server: socketserver.BaseServer):
+    def __init__(self, request: bytes, client_address: Tuple[str, int], server: socketserver.BaseServer):
         super().__init__(request, client_address, server)
         self.payload = []
 
@@ -33,8 +36,7 @@ class CIServer(BaseHTTPRequestHandler):
         repo_name = self.payload["repository"]["name"]
         branch = self.payload["ref"].replace("refs/heads/", "")
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
-        repo = CI.clone_repo(clone_url, branch)
-
+        repo = CI.clone_repo(clone_url, branch, repo_name)
         build_result = CI.ci_build(repo)
         test_result = CI.ci_test(repo)
         repo_full_name = self.payload["repository"]["full_name"]
@@ -50,33 +52,29 @@ class CIServerHelper:
             event = "Unknown event"
         return event
 
-    def clone_repo(self, clone_url, branch):
-        dir_path = os.path.realpath(__file__)
-        dir_name = os.path.dirname(dir_path)
-        repo_path = os.path.join(dir_name, "CI-clonedir")
+    def clone_repo(self, clone_url, branch, repo_name):
+        # Function to clone a repo to the server, or fetch if the repo
+        # is already present locally.
+        dir_name = os.path.dirname(os.path.realpath(__file__))
+        new_dir = "CI-clonedir/" + repo_name
+        repo_path = os.path.join(dir_name, new_dir)
 
+        # Check for existing repo
         try:
             repo = git.Repo(repo_path)
         except(git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
             repo = None
-
+        # Fetch if repo exists, or create directory and clone to it if not.
         if repo is not None:
             repo.remotes.origin.fetch()
         else:
             git.Repo.clone_from(clone_url, repo_path)
             repo = git.Repo(repo_path)
 
+        # Check out branch specified in webhook payload.
         repo.git.checkout(branch)
 
         return repo
-
-    def ci_build(self):
-        # TODO: read from .YML file and return the build result as a tuple
-        return  # (True/False, string)
-    
-    def ci_test(self):
-        # TODO: read from .YML file and return the rtest result as a tuple
-        return  # (True/False, string)
 
     def log_results(self, name, commit_id, build_result, test_result):
         """
@@ -101,7 +99,6 @@ class CIServerHelper:
         else:
             f.write("Tests failed!\n\n")
         f.write(f"Message:\n{test_result[1]}\n")
-
         f.close()
 
     def send_results(self, name, commit_id, build_result, test_result, token, statuses_url):
@@ -128,6 +125,60 @@ class CIServerHelper:
         # TODO: complete feature after log_results
         requests.post(url=statuses_url, header=headers, data=payload)
 
+    def ci_build(self, repo, filepath="workflow.yml"):
+        """ Read from workflow file and execute related jobs if triggerred.
+        :return: a tuple of (boolean, string) that contains the build result
+        """
+        path = repo.working_dir + '/' + filepath
+        with open(path) as fin:
+            work = yaml.load(fin, Loader=yaml.FullLoader)
+
+        # Find the jobs to be executed
+        for job in work["jobs"]:
+            # Skip the test part
+            if job["name"] == 'Run tests':
+                continue
+            # Print the current job name
+            print("CI Server: " + job["name"])
+            # Execute the shell commands
+            result = subprocess.run(job["run"], shell=True, text=True,
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # Print the output of the shell commands
+            print(result.stdout)
+            # Return at once if build fails
+            if result.stderr != "":
+                return False, result.stderr
+
+        return True, "Good News: All is Fine."
+
+    def ci_test(self, repo, filepath="workflow.yml"):
+        """ Read from workflow file and execute related jobs if triggerred.
+        :return: a tuple of (boolean, string) that contains the test result
+        """
+        path = repo.working_dir + '/' + filepath
+        with open(path) as fin:
+            work = yaml.load(fin, Loader=yaml.FullLoader)
+
+        # Find the jobs to be executed
+        for job in work["jobs"]:
+            # Skip the build part
+            if job["name"] == 'Build project':
+                continue
+            # Print the current job name
+            print("CI Server: " + job["name"])
+            # Execute the shell commands
+            result = subprocess.run(job["run"], shell=True, text=True,
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # Print the output of the shell commands
+            print(result.stdout)
+            # Return at once if build fails
+            if job["name"] == 'Run tests':
+                if result.stderr[0] == 'E' or result.stderr[0] == 'F':
+                    return False, result.stderr
+            elif result.stderr != "":
+                return False, result.stderr
+
+        return True, "Good News: All is Fine."
 
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):

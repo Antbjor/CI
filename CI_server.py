@@ -4,6 +4,9 @@ import os
 import git
 import yaml
 import json
+import glob
+import re
+from time import strftime, gmtime
 import requests
 
 
@@ -12,15 +15,26 @@ class CIServer(BaseHTTPRequestHandler):
         super().__init__(request, client_address, server)
         self.payload = []
 
-    def response(self, message="Default"):
+    def response(self, message="Default", content_type="text/plain"):
         self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
+        self.send_header('Content-type', content_type)
         self.end_headers()
         self.wfile.write(bytes(message, "utf-8"))
 
     def do_GET(self):
         print(self.headers)
-        self.response()
+        if self.path == '/':
+            self.response()
+        elif self.path == '/results':
+            with open('results.html', 'r') as skeleton:
+                result_list = ''
+                for file in glob.glob("results/*/*/*", recursive=True):
+                    result_list += f'<a href="{file}">{file.replace("results/", "")}</a> <br />\n'
+                message = skeleton.read().format(results=result_list)
+            self.response(message=message, content_type="text/html")
+        elif re.fullmatch(r'/results/.*', self.path):
+            with open(self.path.replace("/", "", 1)) as f:
+                self.response(message=f.read())
 
     def do_POST(self):
         CI = CIServerHelper()
@@ -35,12 +49,16 @@ class CIServer(BaseHTTPRequestHandler):
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
         repo = CI.clone_repo(clone_url, branch)
 
-        build_result = ci_build(repo)
-        test_result = ci_test(repo)
+        build_result, test_result = (False, ''), (False, '')
+        if event == "push":
+            build_result = CI.ci_build(repo)
+            test_result = CI.ci_test(repo)
         repo_full_name = self.payload["repository"]["full_name"]
         statuses_url = self.payload["repository"]["statuses_url"]
         CI.log_results(repo_full_name, commit_id, build_result, test_result)
-        CI.send_results(repo_full_name, commit_id, build_result, test_result, os.environ.get('GITHUB_PAT'), statuses_url)
+        CI.send_results(repo_full_name, commit_id, build_result, test_result, os.environ.get('GITHUB_PAT'),
+                        statuses_url)
+
 
 class CIServerHelper:
     def parse_header(self, header):
@@ -85,6 +103,7 @@ class CIServerHelper:
 
         f = open(log_file, 'w')
 
+        f.write("Log from " + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n\n")
         if build_result[0]:
             f.write("Lint or build successful!\n\n")
         else:

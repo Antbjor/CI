@@ -35,7 +35,7 @@ class CIServer(BaseHTTPRequestHandler):
         repo_name = self.payload["repository"]["name"]
         branch = self.payload["ref"].replace("refs/heads/", "")
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
-        repo = CI.clone_repo(clone_url, branch)
+        repo = CI.clone_repo(clone_url, branch, repo_name)
         CI.ci_build(repo)
         CI.ci_test(repo)
 
@@ -48,22 +48,26 @@ class CIServerHelper:
             event = "Unknown event"
         return event
 
-    def clone_repo(self, clone_url, branch):
-        dir_path = os.path.realpath(__file__)
-        dir_name = os.path.dirname(dir_path)
-        repo_path = os.path.join(dir_name, "CI-clonedir")
+    def clone_repo(self, clone_url, branch, repo_name):
+        # Function to clone a repo to the server, or fetch if the repo
+        # is already present locally.
+        dir_name = os.path.dirname(os.path.realpath(__file__))
+        new_dir = "CI-clonedir/" + repo_name
+        repo_path = os.path.join(dir_name, new_dir)
 
+        # Check for existing repo
         try:
             repo = git.Repo(repo_path)
         except(git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
             repo = None
-
+        # Fetch if repo exists, or create directory and clone to it if not.
         if repo is not None:
             repo.remotes.origin.fetch()
         else:
             git.Repo.clone_from(clone_url, repo_path)
             repo = git.Repo(repo_path)
 
+        # Check out branch specified in webhook payload.
         repo.git.checkout(branch)
 
         return repo

@@ -111,7 +111,24 @@ class CIServerHelper:
         # statuses_url is on the format "https://api.github.com/repos/{owner}/{repo}/statuses/{sha}"
         # owner and repo is already set, therefore we set sha here
         statuses_url = statuses_url.format(sha=commit_id)
+        # Token, fetch from local YML-file..
+        token = ""
+
+        build_state = "failure"
+        test_state = "failure"
+        if build_result[0]:
+            build_state = "success"
+        if test_result[0]:
+            test_state = "success"
+        
+        headers = {"Accept": "application/vnd.github+json", 
+                   "Authorization": "Bearer " + token,
+                   "X-GitHub-Api-Version": "2022-11-28"}
+        data_build = {"state": build_state, "description": "The build was a " + build_state}
+        data_test = {"state": test_state, "description": "The tests was a " + test_state}
         # TODO: complete feature after log_results
+        requests.post(url=statuses_url, header=headers, data=data_build)
+
 
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):

@@ -32,7 +32,7 @@ class CIServer(BaseHTTPRequestHandler):
         repo_name = self.payload["repository"]["name"]
         branch = self.payload["ref"].replace("refs/heads/", "")
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
-        CI.clone_repo(clone_url, branch)
+        CI.clone_repo(clone_url, branch, repo_name)
         # ADD ci_build() here. (will return a tuple)
 
 
@@ -44,10 +44,10 @@ class CIServerHelper:
             event = "Unknown event"
         return event
 
-    def clone_repo(self, clone_url, branch):
-        dir_path = os.path.realpath(__file__)
-        dir_name = os.path.dirname(dir_path)
-        repo_path = os.path.join(dir_name, "CI-clonedir")
+    def clone_repo(self, clone_url, branch, repo_name):
+        dir_name = os.path.dirname(os.path.realpath(__file__))
+        new_dir = "CI-clonedir/" + repo_name
+        repo_path = os.path.join(dir_name, new_dir)
 
         try:
             repo = git.Repo(repo_path)

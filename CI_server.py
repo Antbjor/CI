@@ -35,8 +35,8 @@ class CIServer(BaseHTTPRequestHandler):
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
         repo = CI.clone_repo(clone_url, branch)
 
-        build_result = ci_build(repo)
-        test_result = ci_test(repo)
+        build_result = CI.ci_build(repo)
+        test_result = CI.ci_test(repo)
         repo_full_name = self.payload["repository"]["full_name"]
         statuses_url = self.payload["repository"]["statuses_url"]
         CI.log_results(repo_full_name, commit_id, build_result, test_result)
@@ -71,7 +71,11 @@ class CIServerHelper:
         return repo
 
     def ci_build(self):
-        # TODO: read from .sh file and return the result as a tuple
+        # TODO: read from .YML file and return the build result as a tuple
+        return  # (True/False, string)
+    
+    def ci_test(self):
+        # TODO: read from .YML file and return the rtest result as a tuple
         return  # (True/False, string)
 
     def log_results(self, name, commit_id, build_result, test_result):

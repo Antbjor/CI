@@ -8,23 +8,22 @@ trigger-on: [push]
 
 # Define the jobs of the CI server
 jobs:
-  # Install the dependencies required for the Python project
-  - name: Install dependencies
-    run: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
 
   # Lint the code for the Python project
   - name: Lint code
     run: |
-      ruff *.py
+      ruff tests/test_testcase1.py
+      ruff tests/lint_testcase1.py
+      ruff tests/test_testcase2.py
 
   # Run the tests for the Python project
   - name: Run tests
     run: |
-      python -m unittest CI_server_test.py
+      python -m unittest test_testcase1.py
 
   # Build the Python project
   - name: Build project
     run: |
-      python CI_server.py
+      python tests/lint_testcase1.py
+      python tests/lint_testcase1.py
+      python tests/lint_testcase1.py

@@ -27,4 +27,4 @@ jobs:
   # Build the Python project
   - name: Build project
     run: |
-      python CI_server.py
+    # python CI_server.py

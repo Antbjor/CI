@@ -2,11 +2,12 @@ import os
 import git
 import yaml
 import json
+import requests
 import subprocess
 import socketserver
-
 from typing import Tuple
 from http.server import BaseHTTPRequestHandler, HTTPServer
+
 
 
 class CIServer(BaseHTTPRequestHandler):
@@ -36,9 +37,12 @@ class CIServer(BaseHTTPRequestHandler):
         branch = self.payload["ref"].replace("refs/heads/", "")
         self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
         repo = CI.clone_repo(clone_url, branch, repo_name)
-        CI.ci_build(repo)
-        CI.ci_test(repo)
-
+        build_result = CI.ci_build(repo)
+        test_result = CI.ci_test(repo)
+        repo_full_name = self.payload["repository"]["full_name"]
+        statuses_url = self.payload["repository"]["statuses_url"]
+        CI.log_results(repo_full_name, commit_id, build_result, test_result)
+        CI.send_results(repo_full_name, commit_id, build_result, test_result, os.environ.get('GITHUB_PAT'), statuses_url)
 
 class CIServerHelper:
     def parse_header(self, header):
@@ -71,6 +75,55 @@ class CIServerHelper:
         repo.git.checkout(branch)
 
         return repo
+
+    def log_results(self, name, commit_id, build_result, test_result):
+        """
+        Log the results of build_result and test_result to persistent storage
+        """
+        log_dir = os.path.join('results', name)
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+        log_file = os.path.join(log_dir, commit_id)
+
+        f = open(log_file, 'w')
+
+        if build_result[0]:
+            f.write("Lint or build successful!\n\n")
+        else:
+            f.write("Lint or build failed!\n\n")
+        f.write(f"Message:\n{build_result[1]}\n")
+        f.write("\n----\n")
+
+        if test_result[0]:
+            f.write("Tests successful!\n\n")
+        else:
+            f.write("Tests failed!\n\n")
+        f.write(f"Message:\n{test_result[1]}\n")
+        f.close()
+
+    def send_results(self, name, commit_id, build_result, test_result, token, statuses_url):
+        """
+        Set the commit status on Github for commit_id according to build_result and test_result
+        """
+        # statuses_url is on the format "https://api.github.com/repos/{owner}/{repo}/statuses/{sha}"
+        # owner and repo is already set, therefore we set sha here
+        statuses_url = statuses_url.format(sha=commit_id)
+        # Token, fetch from local YML-file
+        with open('token.yml') as fin:
+            data = yaml.load(fin, Loader=yaml.FullLoader)
+        token = data["TOKEN"]
+
+        build_and_test = "failure"
+        if build_result[0] and test_result[0]:
+            build_and_test = "success"
+        
+        headers = {"Accept": "application/vnd.github+json", 
+                   "Authorization": "Bearer " + token,
+                   "X-GitHub-Api-Version": "2022-11-28"}
+        payload = {"state": build_and_test, "description": "Build succeeded " + build_result[0] + " Test succeeded " + test_result[0]}
+
+        # TODO: complete feature after log_results
+        requests.post(url=statuses_url, header=headers, data=payload)
 
     def ci_build(self, repo, filepath="workflow.yml"):
         """ Read from workflow file and execute related jobs if triggerred.

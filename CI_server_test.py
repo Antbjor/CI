@@ -93,6 +93,27 @@ class CIServerTest(unittest.TestCase):
         # Remove directory after testing
         shutil.rmtree(repo_path)
 
+    def test_log_results_failed_build(self):
+        """
+        Test if failed builds log correctly.
+        Expected outcome is that there is a file in "results/owner/repo/commithash"
+        with the results of the build.
+        """
+        log_path = "results/githubtraining/hellogitworld/cb2d322bee073327e058143329d200024bd6b4c6"
+        if os.path.exists(log_path):
+            os.remove(log_path)
+
+        server = CI_server.CIServerHelper()
+        name = "githubtraining/hellogitworld"
+        commit_id = "cb2d322bee073327e058143329d200024bd6b4c6"
+        build_result = (False, "Error: division by zero")
+        test_result = (False, "Build failed, so did not run")
+        server.log_results(name, commit_id, build_result, test_result)
+
+        with open(log_path) as f:
+            self.assertEqual(f.readline(), "Lint or build failed!\n")
+
+
 
 if __name__ == '__main__':
     unittest.main()

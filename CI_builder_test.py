@@ -15,6 +15,7 @@ class CIBuilderTest(unittest.TestCase):
         Expected response is Default
         """
         ci_helper = CI_server.CIServerHelper
+        print("test_lint_result")
         result1, _ = ci_helper.ci_build(self, repo=Repo(), filepath="test_workflow1.yml")
         result2, _ = ci_helper.ci_build(self, repo=Repo(), filepath="test_workflow2.yml")
         self.assertTrue(result1)
@@ -26,6 +27,7 @@ class CIBuilderTest(unittest.TestCase):
         Expected response is Default
         """
         ci_helper = CI_server.CIServerHelper
+        print("test_autotest_correct")
         result3, _ = ci_helper.ci_test(self, repo=Repo(), filepath="test_workflow3.yml")
         self.assertTrue(result3)
 
@@ -35,6 +37,7 @@ class CIBuilderTest(unittest.TestCase):
         Expected response is Default
         """
         ci_helper = CI_server.CIServerHelper
+        print("test_autotest_wrong")
         result4, _ = ci_helper.ci_test(self, repo=Repo(), filepath="test_workflow4.yml")
         result6, _ = ci_helper.ci_test(self, repo=Repo(), filepath="test_workflow6.yml")
         self.assertFalse(result4)
@@ -46,6 +49,7 @@ class CIBuilderTest(unittest.TestCase):
         Expected response is Default
         """
         ci_helper = CI_server.CIServerHelper
+        print("test_autobuild_result")
         result5, _ = ci_helper.ci_build(self, repo=Repo(), filepath="test_workflow5.yml")
         self.assertTrue(result5)
 

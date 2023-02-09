@@ -4,6 +4,7 @@ import requests
 from threading import Thread, Event
 import os
 import shutil
+from time import sleep
 import git
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -33,6 +34,7 @@ class CIServerTest(unittest.TestCase):
         # Start server on its own thread
         server_thread = StoppableThread(target=CI_server.main)
         server_thread.start()
+        sleep(1)
         r = requests.get('http://127.0.0.1:1337/')
         self.assertEqual(r.text, "Default")
         # Stop/Close the thread
@@ -70,7 +72,8 @@ class CIServerTest(unittest.TestCase):
         server = CI_server.CIServerHelper()
         clone_url = "https://github.com/githubtraining/hellogitworld.git"
         branch = "master"
-        repo_path = server.clone_repo(clone_url, branch).working_dir
+        repo_name = "CI"
+        repo_path = server.clone_repo(clone_url, branch, repo_name).working_dir
 
         self.assertTrue(os.path.exists(repo_path))
         # Remove directory after testing
@@ -78,6 +81,7 @@ class CIServerTest(unittest.TestCase):
 
 
     def test_clone_repo_branch(self):
+
         """
         Test case to see if cloning repo and switching branch works as expected.
         Expected outcome is to see that a file that only exists in a specific branch
@@ -86,12 +90,46 @@ class CIServerTest(unittest.TestCase):
         server = CI_server.CIServerHelper()
         clone_url = "https://github.com/githubtraining/hellogitworld.git"
         branch = "gh-pages"
-        repo_path = server.clone_repo(clone_url, branch).working_dir
+        repo_name = "CI"
+        repo_path = server.clone_repo(clone_url, branch, repo_name).working_dir
         file_path = repo_path + "/index.html"
 
         self.assertTrue(os.path.isfile(file_path))
         # Remove directory after testing
         shutil.rmtree(repo_path)
+
+    def test_log_results_failed_build(self):
+        """
+        Test if failed builds log correctly.
+        Expected outcome is that there is a file in "results/owner/repo/commithash"
+        with the results of the build.
+        """
+        log_path = "results/githubtraining/hellogitworld/cb2d322bee073327e058143329d200024bd6b4c6"
+        if os.path.exists(log_path):
+            os.remove(log_path)
+
+        server = CI_server.CIServerHelper()
+        name = "githubtraining/hellogitworld"
+        commit_id = "cb2d322bee073327e058143329d200024bd6b4c6"
+        build_result = (False, "Error: division by zero")
+        test_result = (False, "Build failed, so did not run")
+        server.log_results(name, commit_id, build_result, test_result)
+
+        with open(log_path) as f:
+            lines = f.read().splitlines()
+            self.assertEqual(lines[2], "Lint or build failed!")
+
+    def test_url_to_access_log_results(self):
+        log_path = "results/githubtraining/hellogitworld/8d2636da55da593c421e1cb09eea502a05556a69"
+        server_thread = StoppableThread(target=CI_server.main)
+        server_thread.start()
+        sleep(1)
+        f = open(log_path, 'w')
+        f.write("TEST FILE")
+        f.close()
+        r = requests.get(f'http://127.0.0.1:1337/{log_path}')
+        self.assertEqual(r.text, "TEST FILE")
+        # server_thread.stop()
 
 
 if __name__ == '__main__':

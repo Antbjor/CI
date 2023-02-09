@@ -18,4 +18,4 @@ jobs:
   # Build the Python project
   - name: Build project
     run: |
-      python tests/lint_testcase2.py
+      python tests/lint_testcase1.py

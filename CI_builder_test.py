@@ -4,7 +4,7 @@ import CI_server
 
 class Repo:
     def __init__(self):
-        self.working_dir = '.'
+        self.working_dir = 'tests'
 
 
 class CIBuilderTest(unittest.TestCase):
@@ -15,8 +15,9 @@ class CIBuilderTest(unittest.TestCase):
         Expected response is Default
         """
         ci_helper = CI_server.CIServerHelper
-        result1, _ = ci_helper.ci_build(self, repo=Repo(), filepath="tests/test_workflow1.yml")
-        result2, _ = ci_helper.ci_build(self, repo=Repo(), filepath="tests/test_workflow2.yml")
+        print("test_lint_result")
+        result1, _ = ci_helper.ci_build(self, repo=Repo(), filepath="test_workflow1.yml")
+        result2, _ = ci_helper.ci_build(self, repo=Repo(), filepath="test_workflow2.yml")
         self.assertTrue(result1)
         self.assertFalse(result2)
 
@@ -26,7 +27,8 @@ class CIBuilderTest(unittest.TestCase):
         Expected response is Default
         """
         ci_helper = CI_server.CIServerHelper
-        result3, _ = ci_helper.ci_test(self, repo=Repo(), filepath="tests/test_workflow3.yml")
+        print("test_autotest_correct")
+        result3, _ = ci_helper.ci_test(self, repo=Repo(), filepath="test_workflow3.yml")
         self.assertTrue(result3)
 
     def test_autotest_wrong(self):
@@ -35,8 +37,9 @@ class CIBuilderTest(unittest.TestCase):
         Expected response is Default
         """
         ci_helper = CI_server.CIServerHelper
-        result4, _ = ci_helper.ci_test(self, repo=Repo(), filepath="tests/test_workflow4.yml")
-        result6, _ = ci_helper.ci_test(self, repo=Repo(), filepath="tests/test_workflow6.yml")
+        print("test_autotest_wrong")
+        result4, _ = ci_helper.ci_test(self, repo=Repo(), filepath="test_workflow4.yml")
+        result6, _ = ci_helper.ci_test(self, repo=Repo(), filepath="test_workflow6.yml")
         self.assertFalse(result4)
         self.assertFalse(result6)
 
@@ -46,7 +49,8 @@ class CIBuilderTest(unittest.TestCase):
         Expected response is Default
         """
         ci_helper = CI_server.CIServerHelper
-        result5, _ = ci_helper.ci_build(self, repo=Repo(), filepath="tests/test_workflow5.yml")
+        print("test_autobuild_result")
+        result5, _ = ci_helper.ci_build(self, repo=Repo(), filepath="test_workflow5.yml")
         self.assertTrue(result5)
 
 

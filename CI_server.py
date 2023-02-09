@@ -1,4 +1,6 @@
 import os
+import sys
+
 import git
 import yaml
 import json
@@ -10,7 +12,6 @@ import subprocess
 import socketserver
 from typing import Tuple
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
 
 
 class CIServer(BaseHTTPRequestHandler):
@@ -136,18 +137,20 @@ class CIServerHelper:
         build_and_test = "failure"
         if build_result[0] and test_result[0]:
             build_and_test = "success"
-        
-        headers = {"Accept": "application/vnd.github+json", 
+
+        headers = {"Accept": "application/vnd.github+json",
                    "Authorization": "Bearer " + token,
                    "X-GitHub-Api-Version": "2022-11-28"}
-        payload = {"state": build_and_test, "description": "Build succeeded " + build_result[0] + " Test succeeded " + test_result[0]}
+        payload = {"state": build_and_test, "description": "Build succeeded " + str(build_result[0]) +
+                                                           " Test succeeded " + str(test_result[0])}
 
         # TODO: complete feature after log_results
-        requests.post(url=statuses_url, header=headers, data=payload)
+        requests.post(url=statuses_url, headers=headers, json=payload)
 
     def ci_build(self, repo, filepath="workflow.yml"):
-        """ Read from workflow file and execute related jobs if triggerred.
-        :return: a tuple of (boolean, string) that contains the build result
+        """
+        Read from workflow file and execute related jobs if triggerred.
+        Return a tuple of (boolean, string) that contains the build result
         """
         path = repo.working_dir + '/' + filepath
         with open(path) as fin:
@@ -158,22 +161,40 @@ class CIServerHelper:
             # Skip the test part
             if job["name"] == 'Run tests':
                 continue
+            # Split the tasks to run
+            tasks = job["run"].splitlines()
             # Print the current job name
-            print("CI Server: " + job["name"])
-            # Execute the shell commands
-            result = subprocess.run(job["run"], shell=True, text=True,
-                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            # Print the output of the shell commands
-            print(result.stdout)
-            # Return at once if build fails
-            if result.stderr != "":
-                return False, result.stderr
+            print("CI Server Build: " + job["name"])
+
+            if job["name"] == 'Lint code':
+                # Execute the shell commands
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Return at once if build fails (ruff print the error message in stdout)
+                    if result.stdout != "":
+                        return False, result.stdout
+            # Run tests after passing lint
+            elif job["name"] == 'Build project':
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Print the output of the shell commands
+                    print(result.stdout)
+                    # Return at once if build fails
+                    if result.stderr != "":
+                        return False, result.stderr
+            else:
+                print("ERROR:", "Unrecognized job name!", file=sys.stderr)
 
         return True, "Good News: All is Fine."
 
     def ci_test(self, repo, filepath="workflow.yml"):
-        """ Read from workflow file and execute related jobs if triggerred.
-        :return: a tuple of (boolean, string) that contains the test result
+        """
+        Read from workflow file and execute related jobs if triggerred.
+        Return a tuple of (boolean, string) that contains the test result
         """
         path = repo.working_dir + '/' + filepath
         with open(path) as fin:
@@ -184,19 +205,33 @@ class CIServerHelper:
             # Skip the build part
             if job["name"] == 'Build project':
                 continue
+            # Split the tasks to run
+            tasks = job["run"].splitlines()
             # Print the current job name
-            print("CI Server: " + job["name"])
-            # Execute the shell commands
-            result = subprocess.run(job["run"], shell=True, text=True,
-                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            # Print the output of the shell commands
-            print(result.stdout)
-            # Return at once if build fails
-            if job["name"] == 'Run tests':
-                if result.stderr[0] == 'E' or result.stderr[0] == 'F':
-                    return False, result.stderr
-            elif result.stderr != "":
-                return False, result.stderr
+            print("CI Server Test: " + job["name"])
+
+            if job["name"] == 'Lint code':
+                # Execute the shell commands
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Return at once if build fails
+                    if result.stdout != "":
+                        return False, result.stdout
+            # Run tests after passing lint
+            elif job["name"] == 'Run tests':
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Print the output of the shell commands
+                    print(result.stdout)
+                    # Return at once if build fails (E: File Error F: Test Failed)
+                    if result.stderr[0] == 'E' or result.stderr[0] == 'F':
+                        return False, result.stderr
+            else:
+                print("ERROR:", "Unrecognized job name!", file=sys.stderr)
 
         return True, "Good News: All is Fine."
 

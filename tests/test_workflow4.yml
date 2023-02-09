@@ -1,0 +1,25 @@
+# A simplified workflow file
+
+# Name to the CI workflow
+name: CI_Workflow
+
+# Specify the events that trigger the CI workflow
+trigger-on: [push]
+
+# Define the jobs of the CI server
+jobs:
+
+  # Lint the code for the Python project
+  - name: Lint code
+    run: |
+      ruff tests/test_testcase2.py
+
+  # Run the tests for the Python project
+  - name: Run tests
+    run: |
+      python -m unittest tests/test_testcase2.py
+
+  # Build the Python project
+  - name: Build project
+    run: |
+      python tests/lint_testcase1.py

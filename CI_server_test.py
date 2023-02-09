@@ -72,7 +72,8 @@ class CIServerTest(unittest.TestCase):
         server = CI_server.CIServerHelper()
         clone_url = "https://github.com/githubtraining/hellogitworld.git"
         branch = "master"
-        repo_path = server.clone_repo(clone_url, branch).working_dir
+        repo_name = "CI"
+        repo_path = server.clone_repo(clone_url, branch, repo_name).working_dir
 
         self.assertTrue(os.path.exists(repo_path))
         # Remove directory after testing
@@ -80,6 +81,7 @@ class CIServerTest(unittest.TestCase):
 
 
     def test_clone_repo_branch(self):
+
         """
         Test case to see if cloning repo and switching branch works as expected.
         Expected outcome is to see that a file that only exists in a specific branch
@@ -88,7 +90,8 @@ class CIServerTest(unittest.TestCase):
         server = CI_server.CIServerHelper()
         clone_url = "https://github.com/githubtraining/hellogitworld.git"
         branch = "gh-pages"
-        repo_path = server.clone_repo(clone_url, branch).working_dir
+        repo_name = "CI"
+        repo_path = server.clone_repo(clone_url, branch, repo_name).working_dir
         file_path = repo_path + "/index.html"
 
         self.assertTrue(os.path.isfile(file_path))

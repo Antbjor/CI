@@ -4,6 +4,7 @@ import requests
 from threading import Thread, Event
 import os
 import shutil
+from time import sleep
 import git
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -33,6 +34,7 @@ class CIServerTest(unittest.TestCase):
         # Start server on its own thread
         server_thread = StoppableThread(target=CI_server.main)
         server_thread.start()
+        sleep(1)
         r = requests.get('http://127.0.0.1:1337/')
         self.assertEqual(r.text, "Default")
         # Stop/Close the thread
@@ -114,8 +116,20 @@ class CIServerTest(unittest.TestCase):
         server.log_results(name, commit_id, build_result, test_result)
 
         with open(log_path) as f:
-            self.assertEqual(f.readline(), "Lint or build failed!\n")
+            lines = f.read().splitlines()
+            self.assertEqual(lines[2], "Lint or build failed!")
 
+    def test_url_to_access_log_results(self):
+        log_path = "results/githubtraining/hellogitworld/8d2636da55da593c421e1cb09eea502a05556a69"
+        server_thread = StoppableThread(target=CI_server.main)
+        server_thread.start()
+        sleep(1)
+        f = open(log_path, 'w')
+        f.write("TEST FILE")
+        f.close()
+        r = requests.get(f'http://127.0.0.1:1337/{log_path}')
+        self.assertEqual(r.text, "TEST FILE")
+        # server_thread.stop()
 
 
 if __name__ == '__main__':

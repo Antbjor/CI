@@ -14,7 +14,7 @@ class CIBuilderTest(unittest.TestCase):
         Test case to see if lint error is captured
         Expected response is Default
         """
-        ci_helper = CI_server.CIServerHelper
+        ci_helper = CI_server.CIServerHelper()
         print("test_lint_result")
         result1, _ = ci_helper.ci_build(repo=Repo(), filepath="test_workflow1.yml")
         result2, _ = ci_helper.ci_build(repo=Repo(), filepath="test_workflow2.yml")
@@ -26,7 +26,7 @@ class CIBuilderTest(unittest.TestCase):
         Test case to see if test result is captured and is correct
         Expected response is Default
         """
-        ci_helper = CI_server.CIServerHelper
+        ci_helper = CI_server.CIServerHelper()
         print("test_autotest_correct")
         result3, _ = ci_helper.ci_test(repo=Repo(), filepath="test_workflow3.yml")
         self.assertTrue(result3)
@@ -36,7 +36,7 @@ class CIBuilderTest(unittest.TestCase):
         Test case to see if test result is captured and is wrong
         Expected response is Default
         """
-        ci_helper = CI_server.CIServerHelper
+        ci_helper = CI_server.CIServerHelper()
         print("test_autotest_wrong")
         result4, _ = ci_helper.ci_test(repo=Repo(), filepath="test_workflow4.yml")
         result6, _ = ci_helper.ci_test(repo=Repo(), filepath="test_workflow6.yml")
@@ -48,7 +48,7 @@ class CIBuilderTest(unittest.TestCase):
         Test case to see if build result is captured
         Expected response is Default
         """
-        ci_helper = CI_server.CIServerHelper
+        ci_helper = CI_server.CIServerHelper()
         print("test_autobuild_result")
         result5, _ = ci_helper.ci_build(repo=Repo(), filepath="test_workflow5.yml")
         self.assertTrue(result5)

@@ -15,7 +15,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
 class CIServer(BaseHTTPRequestHandler):
-    def __init__(self, request: bytes, client_address: Tuple[str, int], server: socketserver.BaseServer):
+    def __init__(self, request: bytes, client_address: Tuple[str, int],
+                 server: socketserver.BaseServer):
         super().__init__(request, client_address, server)
         self.payload = []
 
@@ -33,7 +34,9 @@ class CIServer(BaseHTTPRequestHandler):
             with open('results.html', 'r') as skeleton:
                 result_list = ''
                 for file in glob.glob("results/*/*/*", recursive=True):
-                    result_list += f'<a href="{file}">{file.replace("results/", "")}</a> <br />\n'
+                    result_list += (f'<a href="{file}">' +
+                                    file.replace("results/", "") +
+                                    '</a> <br />\n')
                 message = skeleton.read().format(results=result_list)
             self.response(message=message, content_type="text/html")
         elif re.fullmatch(r'/results/.*', self.path):
@@ -50,7 +53,8 @@ class CIServer(BaseHTTPRequestHandler):
         clone_url = self.payload["repository"]["clone_url"]
         repo_name = self.payload["repository"]["name"]
         branch = self.payload["ref"].replace("refs/heads/", "")
-        self.response(f'Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}')
+        self.response(f'Recieved Event: {event}, ' +
+                      f'Commit_id: {commit_id}, Clone_url: {clone_url}')
         repo = CI.clone_repo(clone_url, branch, repo_name)
 
         build_result, test_result = (False, ''), (False, '')
@@ -60,8 +64,7 @@ class CIServer(BaseHTTPRequestHandler):
         repo_full_name = self.payload["repository"]["full_name"]
         statuses_url = self.payload["repository"]["statuses_url"]
         CI.log_results(repo_full_name, commit_id, build_result, test_result)
-        CI.send_results(repo_full_name, commit_id, build_result, test_result, os.environ.get('GITHUB_PAT'),
-                        statuses_url)
+        CI.send_results(commit_id, build_result, test_result, statuses_url)
 
 
 class CIServerHelper:
@@ -122,11 +125,13 @@ class CIServerHelper:
         f.write(f"Message:\n{test_result[1]}\n")
         f.close()
 
-    def send_results(self, name, commit_id, build_result, test_result, token, statuses_url):
+    def send_results(self, commit_id, build_result, test_result, statuses_url):
         """
-        Set the commit status on Github for commit_id according to build_result and test_result
+        Set the commit status on Github for commit_id
+        according to build_result and test_result
         """
-        # statuses_url is on the format "https://api.github.com/repos/{owner}/{repo}/statuses/{sha}"
+        # statuses_url is on the format
+        # "https://api.github.com/repos/{owner}/{repo}/statuses/{sha}"
         # owner and repo is already set, therefore we set sha here
         statuses_url = statuses_url.format(sha=commit_id)
         # Token, fetch from local YML-file
@@ -141,8 +146,9 @@ class CIServerHelper:
         headers = {"Accept": "application/vnd.github+json",
                    "Authorization": "Bearer " + token,
                    "X-GitHub-Api-Version": "2022-11-28"}
-        payload = {"state": build_and_test, "description": "Build succeeded " + str(build_result[0]) +
-                                                           " Test succeeded " + str(test_result[0])}
+        payload = {"state": build_and_test,
+                   "description": "Build succeeded " + str(build_result[0]) +
+                                  " Test succeeded " + str(test_result[0])}
 
         # TODO: complete feature after log_results
         requests.post(url=statuses_url, headers=headers, json=payload)
@@ -171,15 +177,19 @@ class CIServerHelper:
                 for task in tasks:
                     # Execute the shell commands
                     result = subprocess.run(task, shell=True, text=True,
-                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    # Return at once if build fails (ruff print the error message in stdout)
+                                            stdout=subprocess.PIPE,
+                                            stderr=subprocess.PIPE)
+                    # Return at once if build fails
+                    # (ruff print the error message in stdout)
                     if result.stdout != "":
                         return False, result.stdout
-            elif job["name"] == 'Build project' or job["name"] == 'Install dependencies':
+            elif (job["name"] == 'Build project'
+                  or job["name"] == 'Install dependencies'):
                 for task in tasks:
                     # Execute the shell commands
                     result = subprocess.run(task, shell=True, text=True,
-                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                            stdout=subprocess.PIPE,
+                                            stderr=subprocess.PIPE)
                     # Print the output of the shell commands
                     print(result.stdout)
                     # Return at once if build fails
@@ -214,7 +224,8 @@ class CIServerHelper:
                 for task in tasks:
                     # Execute the shell commands
                     result = subprocess.run(task, shell=True, text=True,
-                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                            stdout=subprocess.PIPE,
+                                            stderr=subprocess.PIPE)
                     # Return at once if build fails
                     if result.stdout != "":
                         return False, result.stdout
@@ -222,17 +233,19 @@ class CIServerHelper:
                 for task in tasks:
                     # Execute the shell commands
                     result = subprocess.run(task, shell=True, text=True,
-                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                            stdout=subprocess.PIPE,
+                                            stderr=subprocess.PIPE)
                     # Print the output of the shell commands
                     print(result.stdout)
-                    # Return at once if build fails (E: File Error F: Test Failed)
+                    # Return at once if build fails (E: File Error F: Failed)
                     if result.stderr[0] == 'E' or result.stderr[0] == 'F':
                         return False, result.stderr
             elif job["name"] == 'Install dependencies':
                 for task in tasks:
                     # Execute the shell commands
                     result = subprocess.run(task, shell=True, text=True,
-                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                            stdout=subprocess.PIPE,
+                                            stderr=subprocess.PIPE)
                     # Print the output of the shell commands
                     print(result.stdout)
                     # Return at once if build fails

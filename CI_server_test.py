@@ -5,8 +5,6 @@ from threading import Thread, Event
 import os
 import shutil
 from time import sleep
-import git
-from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
 class StoppableThread(Thread):

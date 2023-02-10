@@ -12,9 +12,11 @@ A directory is created, called results + the name of the respository. In this di
 The list can be found at http://sunasuna.mooo.com:1337/results.
 
 ### Testing
-The file `CI_server_test.py` contains various tests that can be run.
+The file `CI_server_test.py` and `CI_builder_test.py` contains various tests that can be run.
 
 To run all the test cases existing in `CI_server_test.py` on the code, run `python3 CI_server_test.py` from the main directory.
+
+To run all the test cases existing in `CI_builder_test.py` on the code, run `python3 CI_builder_test.py` from the main directory.
 
 To run a specific test case existing in `CI_server_test.py` on the code, run `python3 -m unittest CI_server_test.CIServerTest.test_name` from the main directory, replacing test_name with the name of the test (the function to be run).
 
@@ -59,7 +61,7 @@ Adam Genell: Worked on the functionality to log the results of the testing/build
 
 Anton Björklund: Worked on the functionality to clone a git repository. 
 
-Wenqi Cao: Wrote functionality to build/perform static syntax on the code and to test the code. 
+Wenqi Cao: Wrote functionality to build/perform static syntax on the code and to test/build the code. 
 
 ### License
 The project is available under the MIT license. See the LICENSE file for more info.

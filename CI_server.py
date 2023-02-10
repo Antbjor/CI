@@ -75,8 +75,10 @@ class CIServer(BaseHTTPRequestHandler):
             test_result = CI.ci_test(repo)
         repo_full_name = self.payload["repository"]["full_name"]
         statuses_url = self.payload["repository"]["statuses_url"]
-        target_url = CI.log_results(repo_full_name, commit_id, build_result, test_result)
-        CI.send_results(commit_id, build_result, test_result, statuses_url, target_url)
+        target_url = CI.log_results(repo_full_name, commit_id,
+                                    build_result, test_result)
+        CI.send_results(commit_id, build_result, test_result,
+                        statuses_url, target_url)
 
 
 class CIServerHelper:

@@ -1,16 +1,15 @@
 import os
 import sys
-
+import re
 import git
 import yaml
 import json
 import glob
-import re
-from time import strftime, gmtime
 import requests
 import subprocess
 import socketserver
 from typing import Tuple
+from time import strftime, gmtime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
@@ -62,7 +61,7 @@ class CIServer(BaseHTTPRequestHandler):
     def do_POST(self):
         """
         Handles incoming POST requests.
-        Receives the payload from Github and extracts relevant information.
+        Receives the payload from GitHub and extracts relevant information.
         Calls the main CI functions using this information.
         """
         CI = CIServerHelper()
@@ -74,7 +73,7 @@ class CIServer(BaseHTTPRequestHandler):
         clone_url = self.payload["repository"]["clone_url"]
         repo_name = self.payload["repository"]["name"]
         branch = self.payload["ref"].replace("refs/heads/", "")
-        self.response(f'Recieved Event: {event}, ' +
+        self.response(f'Received Event: {event}, ' +
                       f'Commit_id: {commit_id}, Clone_url: {clone_url}')
         repo = CI.clone_repo(clone_url, branch, repo_name)
 
@@ -163,7 +162,7 @@ class CIServerHelper:
     def send_results(self, commit_id, build_result, test_result,
                      statuses_url, target_url):
         """
-        Set the commit status on Github for commit_id
+        Set the commit status on GitHub for commit_id
         according to build_result and test_result
         """
         # statuses_url is on the format

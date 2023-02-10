@@ -120,6 +120,11 @@ class CIServerTest(unittest.TestCase):
             self.assertEqual(lines[2], "Lint or build failed!")
 
     def test_url_to_access_log_results(self):
+        """
+        Test for checking if file is accessible over HTTP.
+        Starts the server and sends a GET request to it.
+        Expected outcome is that the file contains the specified text.
+        """
         log_path = "results/githubtraining/hellogitworld/8d2636da55da593c421e1cb09eea502a05556a69"
         server_thread = StoppableThread(target=CI_server.main)
         server_thread.start()

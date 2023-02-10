@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>CI_server API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>CI_server</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import os
+import sys
+
+import git
+import yaml
+import json
+import glob
+import re
+from time import strftime, gmtime
+import requests
+import subprocess
+import socketserver
+from typing import Tuple
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+
+class CIServer(BaseHTTPRequestHandler):
+    def __init__(self, request: bytes, client_address: Tuple[str, int], server: socketserver.BaseServer):
+        super().__init__(request, client_address, server)
+        self.payload = []
+
+    def response(self, message=&#34;Default&#34;, content_type=&#34;text/plain&#34;):
+        &#34;&#34;&#34;
+        HTTP response to webhook
+        &#34;&#34;&#34;
+        self.send_response(200)
+        self.send_header(&#39;Content-type&#39;, content_type)
+        self.end_headers()
+        self.wfile.write(bytes(message, &#34;utf-8&#34;))
+
+    def do_GET(self):
+        &#34;&#34;&#34;
+        Handles incoming POST requests.
+        Receives the payload from Github and extracts relevant information.
+        Calls the main CI functions using this information.
+        &#34;&#34;&#34;
+        print(self.headers)
+        if self.path == &#39;/&#39;:
+            self.response()
+        elif self.path == &#39;/results&#39;:
+            with open(&#39;results.html&#39;, &#39;r&#39;) as skeleton:
+                result_list = &#39;&#39;
+                for file in glob.glob(&#34;results/*/*/*&#34;, recursive=True):
+                    result_list += f&#39;&lt;a href=&#34;{file}&#34;&gt;{file.replace(&#34;results/&#34;, &#34;&#34;)}&lt;/a&gt; &lt;br /&gt;\n&#39;
+                message = skeleton.read().format(results=result_list)
+            self.response(message=message, content_type=&#34;text/html&#34;)
+        elif re.fullmatch(r&#39;/results/.*&#39;, self.path):
+            with open(self.path.replace(&#34;/&#34;, &#34;&#34;, 1)) as f:
+                self.response(message=f.read())
+
+    def do_POST(self):
+        &#34;&#34;&#34;
+        Start the get-build-log chain when receiving a post request from github webhooks
+        &#34;&#34;&#34;
+        CI = CIServerHelper()
+        content_length = int(self.headers[&#39;Content-Length&#39;])
+        post_data = self.rfile.read(content_length)
+        event = CI.parse_header(self.headers)
+        self.payload = json.loads(post_data.decode(&#39;utf-8&#39;))
+        commit_id = self.payload[&#34;after&#34;]
+        clone_url = self.payload[&#34;repository&#34;][&#34;clone_url&#34;]
+        repo_name = self.payload[&#34;repository&#34;][&#34;name&#34;]
+        branch = self.payload[&#34;ref&#34;].replace(&#34;refs/heads/&#34;, &#34;&#34;)
+        self.response(f&#39;Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}&#39;)
+        repo = CI.clone_repo(clone_url, branch, repo_name)
+
+        build_result, test_result = (False, &#39;&#39;), (False, &#39;&#39;)
+        if event == &#34;push&#34;:
+            build_result = CI.ci_build(repo)
+            test_result = CI.ci_test(repo)
+        repo_full_name = self.payload[&#34;repository&#34;][&#34;full_name&#34;]
+        statuses_url = self.payload[&#34;repository&#34;][&#34;statuses_url&#34;]
+        CI.log_results(repo_full_name, commit_id, build_result, test_result)
+        CI.send_results(repo_full_name, commit_id, build_result, test_result, os.environ.get(&#39;GITHUB_PAT&#39;),
+                        statuses_url)
+
+
+class CIServerHelper:
+    def parse_header(self, header):
+        &#34;&#34;&#34;
+        Parsing of http header
+        &#34;&#34;&#34;
+        if &#39;X-Github-Event&#39; in header:
+            event = header[&#39;X-Github-Event&#39;]
+        else:
+            event = &#34;Unknown event&#34;
+        return event
+
+    def clone_repo(self, clone_url, branch, repo_name):
+        &#34;&#34;&#34;
+        Clones a repo specified in webhook payload to the server, or fetch if the repo
+        is already present locally
+        &#34;&#34;&#34;
+        dir_name = os.path.dirname(os.path.realpath(__file__))
+        new_dir = &#34;CI-clonedir/&#34; + repo_name
+        repo_path = os.path.join(dir_name, new_dir)
+
+        # Check for existing repo
+        try:
+            repo = git.Repo(repo_path)
+        except(git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
+            repo = None
+        # Fetch if repo exists, or create directory and clone to it if not.
+        if repo is not None:
+            repo.remotes.origin.fetch()
+        else:
+            git.Repo.clone_from(clone_url, repo_path)
+            repo = git.Repo(repo_path)
+
+        # Check out branch specified in webhook payload.
+        repo.git.checkout(branch)
+
+        return repo
+
+    def log_results(self, name, commit_id, build_result, test_result):
+        &#34;&#34;&#34;
+        Log the results of build_result and test_result to persistent storage
+        &#34;&#34;&#34;
+        log_dir = os.path.join(&#39;results&#39;, name)
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+        log_file = os.path.join(log_dir, commit_id)
+
+        f = open(log_file, &#39;w&#39;)
+
+        f.write(&#34;Log from &#34; + strftime(&#34;%Y-%m-%d %H:%M:%S&#34;, gmtime()) + &#34;\n\n&#34;)
+        if build_result[0]:
+            f.write(&#34;Lint or build successful!\n\n&#34;)
+        else:
+            f.write(&#34;Lint or build failed!\n\n&#34;)
+        f.write(f&#34;Message:\n{build_result[1]}\n&#34;)
+        f.write(&#34;\n----\n&#34;)
+
+        if test_result[0]:
+            f.write(&#34;Tests successful!\n\n&#34;)
+        else:
+            f.write(&#34;Tests failed!\n\n&#34;)
+        f.write(f&#34;Message:\n{test_result[1]}\n&#34;)
+        f.close()
+
+    def send_results(self, name, commit_id, build_result, test_result, token, statuses_url):
+        &#34;&#34;&#34;
+        Set the commit status on Github for commit_id according to build_result and test_result
+        &#34;&#34;&#34;
+        # statuses_url is on the format &#34;https://api.github.com/repos/{owner}/{repo}/statuses/{sha}&#34;
+        # owner and repo is already set, therefore we set sha here
+        statuses_url = statuses_url.format(sha=commit_id)
+        # Token, fetch from local YML-file
+        with open(&#39;token.yml&#39;) as fin:
+            data = yaml.load(fin, Loader=yaml.FullLoader)
+        token = data[&#34;TOKEN&#34;]
+
+        build_and_test = &#34;failure&#34;
+        if build_result[0] and test_result[0]:
+            build_and_test = &#34;success&#34;
+
+        headers = {&#34;Accept&#34;: &#34;application/vnd.github+json&#34;,
+                   &#34;Authorization&#34;: &#34;Bearer &#34; + token,
+                   &#34;X-GitHub-Api-Version&#34;: &#34;2022-11-28&#34;}
+        payload = {&#34;state&#34;: build_and_test, &#34;description&#34;: &#34;Build succeeded &#34; + str(build_result[0]) +
+                                                           &#34; Test succeeded &#34; + str(test_result[0])}
+
+        # TODO: complete feature after log_results
+        requests.post(url=statuses_url, headers=headers, json=payload)
+
+    def ci_build(self, repo, filepath=&#34;workflow.yml&#34;):
+        &#34;&#34;&#34;
+        Read from workflow file and execute related jobs if triggerred.
+        Return a tuple of (boolean, string) that contains the build result
+        &#34;&#34;&#34;
+        path = repo.working_dir + &#39;/&#39; + filepath
+        with open(path) as fin:
+            work = yaml.load(fin, Loader=yaml.FullLoader)
+
+        # Find the jobs to be executed
+        for job in work[&#34;jobs&#34;]:
+            # Skip the test part
+            if job[&#34;name&#34;] == &#39;Run tests&#39;:
+                continue
+            # Split the tasks to run
+            tasks = job[&#34;run&#34;].splitlines()
+            # Print the current job name
+            print(&#34;CI Server Build: &#34; + job[&#34;name&#34;])
+
+            if job[&#34;name&#34;] == &#39;Lint code&#39;:
+                # Execute the shell commands
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Return at once if build fails (ruff print the error message in stdout)
+                    if result.stdout != &#34;&#34;:
+                        return False, result.stdout
+            elif job[&#34;name&#34;] == &#39;Build project&#39; or job[&#34;name&#34;] == &#39;Install dependencies&#39;:
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Print the output of the shell commands
+                    print(result.stdout)
+                    # Return at once if build fails
+                    if result.stderr != &#34;&#34;:
+                        return False, result.stderr
+            else:
+                print(&#34;ERROR:&#34;, &#34;Unrecognized job name!&#34;, file=sys.stderr)
+
+        return True, &#34;Good News: All is Fine.&#34;
+
+    def ci_test(self, repo, filepath=&#34;workflow.yml&#34;):
+        &#34;&#34;&#34;
+        Read from workflow file and execute related jobs if triggerred.
+        Return a tuple of (boolean, string) that contains the test result
+        &#34;&#34;&#34;
+        path = repo.working_dir + &#39;/&#39; + filepath
+        with open(path) as fin:
+            work = yaml.load(fin, Loader=yaml.FullLoader)
+
+        # Find the jobs to be executed
+        for job in work[&#34;jobs&#34;]:
+            # Skip the build part
+            if job[&#34;name&#34;] == &#39;Build project&#39;:
+                continue
+            # Split the tasks to run
+            tasks = job[&#34;run&#34;].splitlines()
+            # Print the current job name
+            print(&#34;CI Server Test: &#34; + job[&#34;name&#34;])
+
+            if job[&#34;name&#34;] == &#39;Lint code&#39;:
+                # Execute the shell commands
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Return at once if build fails
+                    if result.stdout != &#34;&#34;:
+                        return False, result.stdout
+            elif job[&#34;name&#34;] == &#39;Run tests&#39;:
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Print the output of the shell commands
+                    print(result.stdout)
+                    # Return at once if build fails (E: File Error F: Test Failed)
+                    if result.stderr[0] == &#39;E&#39; or result.stderr[0] == &#39;F&#39;:
+                        return False, result.stderr
+            elif job[&#34;name&#34;] == &#39;Install dependencies&#39;:
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Print the output of the shell commands
+                    print(result.stdout)
+                    # Return at once if build fails
+                    if result.stderr != &#34;&#34;:
+                        return False, result.stderr
+            else:
+                print(&#34;ERROR:&#34;, &#34;Unrecognized job name!&#34;, file=sys.stderr)
+
+        return True, &#34;Good News: All is Fine.&#34;
+
+
+def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
+    &#34;&#34;&#34;
+    Initialize server
+    &#34;&#34;&#34;
+    server_address = (&#39;&#39;, port)
+    server = server_class(server_address, handler_class)
+    print(&#34;Starting server\n&#34;)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    server.server_close()
+    print(&#39;Stopping server\n&#39;)
+
+
+def main():
+    with open(&#39;config.yml&#39;) as fin:
+        data = yaml.load(fin, Loader=yaml.FullLoader)
+    PORT = data[&#34;PORT&#34;]
+    run(port=PORT)
+
+
+if __name__ == &#39;__main__&#39;:
+    main()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="CI_server.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main():
+    with open(&#39;config.yml&#39;) as fin:
+        data = yaml.load(fin, Loader=yaml.FullLoader)
+    PORT = data[&#34;PORT&#34;]
+    run(port=PORT)</code></pre>
+</details>
+</dd>
+<dt id="CI_server.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>server_class=http.server.HTTPServer, handler_class=CI_server.CIServer, port=8030)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initialize server</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
+    &#34;&#34;&#34;
+    Initialize server
+    &#34;&#34;&#34;
+    server_address = (&#39;&#39;, port)
+    server = server_class(server_address, handler_class)
+    print(&#34;Starting server\n&#34;)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    server.server_close()
+    print(&#39;Stopping server\n&#39;)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="CI_server.CIServer"><code class="flex name class">
+<span>class <span class="ident">CIServer</span></span>
+<span>(</span><span>request: bytes, client_address: Tuple[str, int], server: socketserver.BaseServer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>HTTP request handler base class.</p>
+
+<p>Content-type: <type>/<subtype></p>
+<p>where <type> and <subtype> should be registered MIME types,
+e.g. "text/html" or "text/plain".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CIServer(BaseHTTPRequestHandler):
+    def __init__(self, request: bytes, client_address: Tuple[str, int], server: socketserver.BaseServer):
+        super().__init__(request, client_address, server)
+        self.payload = []
+
+    def response(self, message=&#34;Default&#34;, content_type=&#34;text/plain&#34;):
+        &#34;&#34;&#34;
+        HTTP response to webhook
+        &#34;&#34;&#34;
+        self.send_response(200)
+        self.send_header(&#39;Content-type&#39;, content_type)
+        self.end_headers()
+        self.wfile.write(bytes(message, &#34;utf-8&#34;))
+
+    def do_GET(self):
+        &#34;&#34;&#34;
+        Handles incoming POST requests.
+        Receives the payload from Github and extracts relevant information.
+        Calls the main CI functions using this information.
+        &#34;&#34;&#34;
+        print(self.headers)
+        if self.path == &#39;/&#39;:
+            self.response()
+        elif self.path == &#39;/results&#39;:
+            with open(&#39;results.html&#39;, &#39;r&#39;) as skeleton:
+                result_list = &#39;&#39;
+                for file in glob.glob(&#34;results/*/*/*&#34;, recursive=True):
+                    result_list += f&#39;&lt;a href=&#34;{file}&#34;&gt;{file.replace(&#34;results/&#34;, &#34;&#34;)}&lt;/a&gt; &lt;br /&gt;\n&#39;
+                message = skeleton.read().format(results=result_list)
+            self.response(message=message, content_type=&#34;text/html&#34;)
+        elif re.fullmatch(r&#39;/results/.*&#39;, self.path):
+            with open(self.path.replace(&#34;/&#34;, &#34;&#34;, 1)) as f:
+                self.response(message=f.read())
+
+    def do_POST(self):
+        &#34;&#34;&#34;
+        Start the get-build-log chain when receiving a post request from github webhooks
+        &#34;&#34;&#34;
+        CI = CIServerHelper()
+        content_length = int(self.headers[&#39;Content-Length&#39;])
+        post_data = self.rfile.read(content_length)
+        event = CI.parse_header(self.headers)
+        self.payload = json.loads(post_data.decode(&#39;utf-8&#39;))
+        commit_id = self.payload[&#34;after&#34;]
+        clone_url = self.payload[&#34;repository&#34;][&#34;clone_url&#34;]
+        repo_name = self.payload[&#34;repository&#34;][&#34;name&#34;]
+        branch = self.payload[&#34;ref&#34;].replace(&#34;refs/heads/&#34;, &#34;&#34;)
+        self.response(f&#39;Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}&#39;)
+        repo = CI.clone_repo(clone_url, branch, repo_name)
+
+        build_result, test_result = (False, &#39;&#39;), (False, &#39;&#39;)
+        if event == &#34;push&#34;:
+            build_result = CI.ci_build(repo)
+            test_result = CI.ci_test(repo)
+        repo_full_name = self.payload[&#34;repository&#34;][&#34;full_name&#34;]
+        statuses_url = self.payload[&#34;repository&#34;][&#34;statuses_url&#34;]
+        CI.log_results(repo_full_name, commit_id, build_result, test_result)
+        CI.send_results(repo_full_name, commit_id, build_result, test_result, os.environ.get(&#39;GITHUB_PAT&#39;),
+                        statuses_url)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>http.server.BaseHTTPRequestHandler</li>
+<li>socketserver.StreamRequestHandler</li>
+<li>socketserver.BaseRequestHandler</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CI_server.CIServer.do_GET"><code class="name flex">
+<span>def <span class="ident">do_GET</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Handles incoming POST requests.
+Receives the payload from Github and extracts relevant information.
+Calls the main CI functions using this information.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def do_GET(self):
+    &#34;&#34;&#34;
+    Handles incoming POST requests.
+    Receives the payload from Github and extracts relevant information.
+    Calls the main CI functions using this information.
+    &#34;&#34;&#34;
+    print(self.headers)
+    if self.path == &#39;/&#39;:
+        self.response()
+    elif self.path == &#39;/results&#39;:
+        with open(&#39;results.html&#39;, &#39;r&#39;) as skeleton:
+            result_list = &#39;&#39;
+            for file in glob.glob(&#34;results/*/*/*&#34;, recursive=True):
+                result_list += f&#39;&lt;a href=&#34;{file}&#34;&gt;{file.replace(&#34;results/&#34;, &#34;&#34;)}&lt;/a&gt; &lt;br /&gt;\n&#39;
+            message = skeleton.read().format(results=result_list)
+        self.response(message=message, content_type=&#34;text/html&#34;)
+    elif re.fullmatch(r&#39;/results/.*&#39;, self.path):
+        with open(self.path.replace(&#34;/&#34;, &#34;&#34;, 1)) as f:
+            self.response(message=f.read())</code></pre>
+</details>
+</dd>
+<dt id="CI_server.CIServer.do_POST"><code class="name flex">
+<span>def <span class="ident">do_POST</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Start the get-build-log chain when receiving a post request from github webhooks</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def do_POST(self):
+    &#34;&#34;&#34;
+    Start the get-build-log chain when receiving a post request from github webhooks
+    &#34;&#34;&#34;
+    CI = CIServerHelper()
+    content_length = int(self.headers[&#39;Content-Length&#39;])
+    post_data = self.rfile.read(content_length)
+    event = CI.parse_header(self.headers)
+    self.payload = json.loads(post_data.decode(&#39;utf-8&#39;))
+    commit_id = self.payload[&#34;after&#34;]
+    clone_url = self.payload[&#34;repository&#34;][&#34;clone_url&#34;]
+    repo_name = self.payload[&#34;repository&#34;][&#34;name&#34;]
+    branch = self.payload[&#34;ref&#34;].replace(&#34;refs/heads/&#34;, &#34;&#34;)
+    self.response(f&#39;Recieved Event: {event}, Commit_id: {commit_id}, Clone_url: {clone_url}&#39;)
+    repo = CI.clone_repo(clone_url, branch, repo_name)
+
+    build_result, test_result = (False, &#39;&#39;), (False, &#39;&#39;)
+    if event == &#34;push&#34;:
+        build_result = CI.ci_build(repo)
+        test_result = CI.ci_test(repo)
+    repo_full_name = self.payload[&#34;repository&#34;][&#34;full_name&#34;]
+    statuses_url = self.payload[&#34;repository&#34;][&#34;statuses_url&#34;]
+    CI.log_results(repo_full_name, commit_id, build_result, test_result)
+    CI.send_results(repo_full_name, commit_id, build_result, test_result, os.environ.get(&#39;GITHUB_PAT&#39;),
+                    statuses_url)</code></pre>
+</details>
+</dd>
+<dt id="CI_server.CIServer.response"><code class="name flex">
+<span>def <span class="ident">response</span></span>(<span>self, message='Default', content_type='text/plain')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>HTTP response to webhook</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def response(self, message=&#34;Default&#34;, content_type=&#34;text/plain&#34;):
+    &#34;&#34;&#34;
+    HTTP response to webhook
+    &#34;&#34;&#34;
+    self.send_response(200)
+    self.send_header(&#39;Content-type&#39;, content_type)
+    self.end_headers()
+    self.wfile.write(bytes(message, &#34;utf-8&#34;))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="CI_server.CIServerHelper"><code class="flex name class">
+<span>class <span class="ident">CIServerHelper</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CIServerHelper:
+    def parse_header(self, header):
+        &#34;&#34;&#34;
+        Parsing of http header
+        &#34;&#34;&#34;
+        if &#39;X-Github-Event&#39; in header:
+            event = header[&#39;X-Github-Event&#39;]
+        else:
+            event = &#34;Unknown event&#34;
+        return event
+
+    def clone_repo(self, clone_url, branch, repo_name):
+        &#34;&#34;&#34;
+        Clones a repo specified in webhook payload to the server, or fetch if the repo
+        is already present locally
+        &#34;&#34;&#34;
+        dir_name = os.path.dirname(os.path.realpath(__file__))
+        new_dir = &#34;CI-clonedir/&#34; + repo_name
+        repo_path = os.path.join(dir_name, new_dir)
+
+        # Check for existing repo
+        try:
+            repo = git.Repo(repo_path)
+        except(git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
+            repo = None
+        # Fetch if repo exists, or create directory and clone to it if not.
+        if repo is not None:
+            repo.remotes.origin.fetch()
+        else:
+            git.Repo.clone_from(clone_url, repo_path)
+            repo = git.Repo(repo_path)
+
+        # Check out branch specified in webhook payload.
+        repo.git.checkout(branch)
+
+        return repo
+
+    def log_results(self, name, commit_id, build_result, test_result):
+        &#34;&#34;&#34;
+        Log the results of build_result and test_result to persistent storage
+        &#34;&#34;&#34;
+        log_dir = os.path.join(&#39;results&#39;, name)
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+        log_file = os.path.join(log_dir, commit_id)
+
+        f = open(log_file, &#39;w&#39;)
+
+        f.write(&#34;Log from &#34; + strftime(&#34;%Y-%m-%d %H:%M:%S&#34;, gmtime()) + &#34;\n\n&#34;)
+        if build_result[0]:
+            f.write(&#34;Lint or build successful!\n\n&#34;)
+        else:
+            f.write(&#34;Lint or build failed!\n\n&#34;)
+        f.write(f&#34;Message:\n{build_result[1]}\n&#34;)
+        f.write(&#34;\n----\n&#34;)
+
+        if test_result[0]:
+            f.write(&#34;Tests successful!\n\n&#34;)
+        else:
+            f.write(&#34;Tests failed!\n\n&#34;)
+        f.write(f&#34;Message:\n{test_result[1]}\n&#34;)
+        f.close()
+
+    def send_results(self, name, commit_id, build_result, test_result, token, statuses_url):
+        &#34;&#34;&#34;
+        Set the commit status on Github for commit_id according to build_result and test_result
+        &#34;&#34;&#34;
+        # statuses_url is on the format &#34;https://api.github.com/repos/{owner}/{repo}/statuses/{sha}&#34;
+        # owner and repo is already set, therefore we set sha here
+        statuses_url = statuses_url.format(sha=commit_id)
+        # Token, fetch from local YML-file
+        with open(&#39;token.yml&#39;) as fin:
+            data = yaml.load(fin, Loader=yaml.FullLoader)
+        token = data[&#34;TOKEN&#34;]
+
+        build_and_test = &#34;failure&#34;
+        if build_result[0] and test_result[0]:
+            build_and_test = &#34;success&#34;
+
+        headers = {&#34;Accept&#34;: &#34;application/vnd.github+json&#34;,
+                   &#34;Authorization&#34;: &#34;Bearer &#34; + token,
+                   &#34;X-GitHub-Api-Version&#34;: &#34;2022-11-28&#34;}
+        payload = {&#34;state&#34;: build_and_test, &#34;description&#34;: &#34;Build succeeded &#34; + str(build_result[0]) +
+                                                           &#34; Test succeeded &#34; + str(test_result[0])}
+
+        # TODO: complete feature after log_results
+        requests.post(url=statuses_url, headers=headers, json=payload)
+
+    def ci_build(self, repo, filepath=&#34;workflow.yml&#34;):
+        &#34;&#34;&#34;
+        Read from workflow file and execute related jobs if triggerred.
+        Return a tuple of (boolean, string) that contains the build result
+        &#34;&#34;&#34;
+        path = repo.working_dir + &#39;/&#39; + filepath
+        with open(path) as fin:
+            work = yaml.load(fin, Loader=yaml.FullLoader)
+
+        # Find the jobs to be executed
+        for job in work[&#34;jobs&#34;]:
+            # Skip the test part
+            if job[&#34;name&#34;] == &#39;Run tests&#39;:
+                continue
+            # Split the tasks to run
+            tasks = job[&#34;run&#34;].splitlines()
+            # Print the current job name
+            print(&#34;CI Server Build: &#34; + job[&#34;name&#34;])
+
+            if job[&#34;name&#34;] == &#39;Lint code&#39;:
+                # Execute the shell commands
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Return at once if build fails (ruff print the error message in stdout)
+                    if result.stdout != &#34;&#34;:
+                        return False, result.stdout
+            elif job[&#34;name&#34;] == &#39;Build project&#39; or job[&#34;name&#34;] == &#39;Install dependencies&#39;:
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Print the output of the shell commands
+                    print(result.stdout)
+                    # Return at once if build fails
+                    if result.stderr != &#34;&#34;:
+                        return False, result.stderr
+            else:
+                print(&#34;ERROR:&#34;, &#34;Unrecognized job name!&#34;, file=sys.stderr)
+
+        return True, &#34;Good News: All is Fine.&#34;
+
+    def ci_test(self, repo, filepath=&#34;workflow.yml&#34;):
+        &#34;&#34;&#34;
+        Read from workflow file and execute related jobs if triggerred.
+        Return a tuple of (boolean, string) that contains the test result
+        &#34;&#34;&#34;
+        path = repo.working_dir + &#39;/&#39; + filepath
+        with open(path) as fin:
+            work = yaml.load(fin, Loader=yaml.FullLoader)
+
+        # Find the jobs to be executed
+        for job in work[&#34;jobs&#34;]:
+            # Skip the build part
+            if job[&#34;name&#34;] == &#39;Build project&#39;:
+                continue
+            # Split the tasks to run
+            tasks = job[&#34;run&#34;].splitlines()
+            # Print the current job name
+            print(&#34;CI Server Test: &#34; + job[&#34;name&#34;])
+
+            if job[&#34;name&#34;] == &#39;Lint code&#39;:
+                # Execute the shell commands
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Return at once if build fails
+                    if result.stdout != &#34;&#34;:
+                        return False, result.stdout
+            elif job[&#34;name&#34;] == &#39;Run tests&#39;:
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Print the output of the shell commands
+                    print(result.stdout)
+                    # Return at once if build fails (E: File Error F: Test Failed)
+                    if result.stderr[0] == &#39;E&#39; or result.stderr[0] == &#39;F&#39;:
+                        return False, result.stderr
+            elif job[&#34;name&#34;] == &#39;Install dependencies&#39;:
+                for task in tasks:
+                    # Execute the shell commands
+                    result = subprocess.run(task, shell=True, text=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # Print the output of the shell commands
+                    print(result.stdout)
+                    # Return at once if build fails
+                    if result.stderr != &#34;&#34;:
+                        return False, result.stderr
+            else:
+                print(&#34;ERROR:&#34;, &#34;Unrecognized job name!&#34;, file=sys.stderr)
+
+        return True, &#34;Good News: All is Fine.&#34;</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="CI_server.CIServerHelper.ci_build"><code class="name flex">
+<span>def <span class="ident">ci_build</span></span>(<span>self, repo, filepath='workflow.yml')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read from workflow file and execute related jobs if triggerred.
+Return a tuple of (boolean, string) that contains the build result</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ci_build(self, repo, filepath=&#34;workflow.yml&#34;):
+    &#34;&#34;&#34;
+    Read from workflow file and execute related jobs if triggerred.
+    Return a tuple of (boolean, string) that contains the build result
+    &#34;&#34;&#34;
+    path = repo.working_dir + &#39;/&#39; + filepath
+    with open(path) as fin:
+        work = yaml.load(fin, Loader=yaml.FullLoader)
+
+    # Find the jobs to be executed
+    for job in work[&#34;jobs&#34;]:
+        # Skip the test part
+        if job[&#34;name&#34;] == &#39;Run tests&#39;:
+            continue
+        # Split the tasks to run
+        tasks = job[&#34;run&#34;].splitlines()
+        # Print the current job name
+        print(&#34;CI Server Build: &#34; + job[&#34;name&#34;])
+
+        if job[&#34;name&#34;] == &#39;Lint code&#39;:
+            # Execute the shell commands
+            for task in tasks:
+                # Execute the shell commands
+                result = subprocess.run(task, shell=True, text=True,
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                # Return at once if build fails (ruff print the error message in stdout)
+                if result.stdout != &#34;&#34;:
+                    return False, result.stdout
+        elif job[&#34;name&#34;] == &#39;Build project&#39; or job[&#34;name&#34;] == &#39;Install dependencies&#39;:
+            for task in tasks:
+                # Execute the shell commands
+                result = subprocess.run(task, shell=True, text=True,
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                # Print the output of the shell commands
+                print(result.stdout)
+                # Return at once if build fails
+                if result.stderr != &#34;&#34;:
+                    return False, result.stderr
+        else:
+            print(&#34;ERROR:&#34;, &#34;Unrecognized job name!&#34;, file=sys.stderr)
+
+    return True, &#34;Good News: All is Fine.&#34;</code></pre>
+</details>
+</dd>
+<dt id="CI_server.CIServerHelper.ci_test"><code class="name flex">
+<span>def <span class="ident">ci_test</span></span>(<span>self, repo, filepath='workflow.yml')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read from workflow file and execute related jobs if triggerred.
+Return a tuple of (boolean, string) that contains the test result</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ci_test(self, repo, filepath=&#34;workflow.yml&#34;):
+    &#34;&#34;&#34;
+    Read from workflow file and execute related jobs if triggerred.
+    Return a tuple of (boolean, string) that contains the test result
+    &#34;&#34;&#34;
+    path = repo.working_dir + &#39;/&#39; + filepath
+    with open(path) as fin:
+        work = yaml.load(fin, Loader=yaml.FullLoader)
+
+    # Find the jobs to be executed
+    for job in work[&#34;jobs&#34;]:
+        # Skip the build part
+        if job[&#34;name&#34;] == &#39;Build project&#39;:
+            continue
+        # Split the tasks to run
+        tasks = job[&#34;run&#34;].splitlines()
+        # Print the current job name
+        print(&#34;CI Server Test: &#34; + job[&#34;name&#34;])
+
+        if job[&#34;name&#34;] == &#39;Lint code&#39;:
+            # Execute the shell commands
+            for task in tasks:
+                # Execute the shell commands
+                result = subprocess.run(task, shell=True, text=True,
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                # Return at once if build fails
+                if result.stdout != &#34;&#34;:
+                    return False, result.stdout
+        elif job[&#34;name&#34;] == &#39;Run tests&#39;:
+            for task in tasks:
+                # Execute the shell commands
+                result = subprocess.run(task, shell=True, text=True,
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                # Print the output of the shell commands
+                print(result.stdout)
+                # Return at once if build fails (E: File Error F: Test Failed)
+                if result.stderr[0] == &#39;E&#39; or result.stderr[0] == &#39;F&#39;:
+                    return False, result.stderr
+        elif job[&#34;name&#34;] == &#39;Install dependencies&#39;:
+            for task in tasks:
+                # Execute the shell commands
+                result = subprocess.run(task, shell=True, text=True,
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                # Print the output of the shell commands
+                print(result.stdout)
+                # Return at once if build fails
+                if result.stderr != &#34;&#34;:
+                    return False, result.stderr
+        else:
+            print(&#34;ERROR:&#34;, &#34;Unrecognized job name!&#34;, file=sys.stderr)
+
+    return True, &#34;Good News: All is Fine.&#34;</code></pre>
+</details>
+</dd>
+<dt id="CI_server.CIServerHelper.clone_repo"><code class="name flex">
+<span>def <span class="ident">clone_repo</span></span>(<span>self, clone_url, branch, repo_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Clones a repo specified in webhook payload to the server, or fetch if the repo
+is already present locally</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clone_repo(self, clone_url, branch, repo_name):
+    &#34;&#34;&#34;
+    Clones a repo specified in webhook payload to the server, or fetch if the repo
+    is already present locally
+    &#34;&#34;&#34;
+    dir_name = os.path.dirname(os.path.realpath(__file__))
+    new_dir = &#34;CI-clonedir/&#34; + repo_name
+    repo_path = os.path.join(dir_name, new_dir)
+
+    # Check for existing repo
+    try:
+        repo = git.Repo(repo_path)
+    except(git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
+        repo = None
+    # Fetch if repo exists, or create directory and clone to it if not.
+    if repo is not None:
+        repo.remotes.origin.fetch()
+    else:
+        git.Repo.clone_from(clone_url, repo_path)
+        repo = git.Repo(repo_path)
+
+    # Check out branch specified in webhook payload.
+    repo.git.checkout(branch)
+
+    return repo</code></pre>
+</details>
+</dd>
+<dt id="CI_server.CIServerHelper.log_results"><code class="name flex">
+<span>def <span class="ident">log_results</span></span>(<span>self, name, commit_id, build_result, test_result)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Log the results of build_result and test_result to persistent storage</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def log_results(self, name, commit_id, build_result, test_result):
+    &#34;&#34;&#34;
+    Log the results of build_result and test_result to persistent storage
+    &#34;&#34;&#34;
+    log_dir = os.path.join(&#39;results&#39;, name)
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    log_file = os.path.join(log_dir, commit_id)
+
+    f = open(log_file, &#39;w&#39;)
+
+    f.write(&#34;Log from &#34; + strftime(&#34;%Y-%m-%d %H:%M:%S&#34;, gmtime()) + &#34;\n\n&#34;)
+    if build_result[0]:
+        f.write(&#34;Lint or build successful!\n\n&#34;)
+    else:
+        f.write(&#34;Lint or build failed!\n\n&#34;)
+    f.write(f&#34;Message:\n{build_result[1]}\n&#34;)
+    f.write(&#34;\n----\n&#34;)
+
+    if test_result[0]:
+        f.write(&#34;Tests successful!\n\n&#34;)
+    else:
+        f.write(&#34;Tests failed!\n\n&#34;)
+    f.write(f&#34;Message:\n{test_result[1]}\n&#34;)
+    f.close()</code></pre>
+</details>
+</dd>
+<dt id="CI_server.CIServerHelper.parse_header"><code class="name flex">
+<span>def <span class="ident">parse_header</span></span>(<span>self, header)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parsing of http header</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_header(self, header):
+    &#34;&#34;&#34;
+    Parsing of http header
+    &#34;&#34;&#34;
+    if &#39;X-Github-Event&#39; in header:
+        event = header[&#39;X-Github-Event&#39;]
+    else:
+        event = &#34;Unknown event&#34;
+    return event</code></pre>
+</details>
+</dd>
+<dt id="CI_server.CIServerHelper.send_results"><code class="name flex">
+<span>def <span class="ident">send_results</span></span>(<span>self, name, commit_id, build_result, test_result, token, statuses_url)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Set the commit status on Github for commit_id according to build_result and test_result</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def send_results(self, name, commit_id, build_result, test_result, token, statuses_url):
+    &#34;&#34;&#34;
+    Set the commit status on Github for commit_id according to build_result and test_result
+    &#34;&#34;&#34;
+    # statuses_url is on the format &#34;https://api.github.com/repos/{owner}/{repo}/statuses/{sha}&#34;
+    # owner and repo is already set, therefore we set sha here
+    statuses_url = statuses_url.format(sha=commit_id)
+    # Token, fetch from local YML-file
+    with open(&#39;token.yml&#39;) as fin:
+        data = yaml.load(fin, Loader=yaml.FullLoader)
+    token = data[&#34;TOKEN&#34;]
+
+    build_and_test = &#34;failure&#34;
+    if build_result[0] and test_result[0]:
+        build_and_test = &#34;success&#34;
+
+    headers = {&#34;Accept&#34;: &#34;application/vnd.github+json&#34;,
+               &#34;Authorization&#34;: &#34;Bearer &#34; + token,
+               &#34;X-GitHub-Api-Version&#34;: &#34;2022-11-28&#34;}
+    payload = {&#34;state&#34;: build_and_test, &#34;description&#34;: &#34;Build succeeded &#34; + str(build_result[0]) +
+                                                       &#34; Test succeeded &#34; + str(test_result[0])}
+
+    # TODO: complete feature after log_results
+    requests.post(url=statuses_url, headers=headers, json=payload)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="CI_server.main" href="#CI_server.main">main</a></code></li>
+<li><code><a title="CI_server.run" href="#CI_server.run">run</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="CI_server.CIServer" href="#CI_server.CIServer">CIServer</a></code></h4>
+<ul class="">
+<li><code><a title="CI_server.CIServer.do_GET" href="#CI_server.CIServer.do_GET">do_GET</a></code></li>
+<li><code><a title="CI_server.CIServer.do_POST" href="#CI_server.CIServer.do_POST">do_POST</a></code></li>
+<li><code><a title="CI_server.CIServer.response" href="#CI_server.CIServer.response">response</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CI_server.CIServerHelper" href="#CI_server.CIServerHelper">CIServerHelper</a></code></h4>
+<ul class="two-column">
+<li><code><a title="CI_server.CIServerHelper.ci_build" href="#CI_server.CIServerHelper.ci_build">ci_build</a></code></li>
+<li><code><a title="CI_server.CIServerHelper.ci_test" href="#CI_server.CIServerHelper.ci_test">ci_test</a></code></li>
+<li><code><a title="CI_server.CIServerHelper.clone_repo" href="#CI_server.CIServerHelper.clone_repo">clone_repo</a></code></li>
+<li><code><a title="CI_server.CIServerHelper.log_results" href="#CI_server.CIServerHelper.log_results">log_results</a></code></li>
+<li><code><a title="CI_server.CIServerHelper.parse_header" href="#CI_server.CIServerHelper.parse_header">parse_header</a></code></li>
+<li><code><a title="CI_server.CIServerHelper.send_results" href="#CI_server.CIServerHelper.send_results">send_results</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

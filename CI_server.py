@@ -20,12 +20,20 @@ class CIServer(BaseHTTPRequestHandler):
         self.payload = []
 
     def response(self, message="Default", content_type="text/plain"):
+        """
+        HTTP response to webhook
+        """
         self.send_response(200)
         self.send_header('Content-type', content_type)
         self.end_headers()
         self.wfile.write(bytes(message, "utf-8"))
 
     def do_GET(self):
+        """
+        Handles incoming POST requests.
+        Receives the payload from Github and extracts relevant information.
+        Calls the main CI functions using this information.
+        """
         print(self.headers)
         if self.path == '/':
             self.response()
@@ -41,6 +49,9 @@ class CIServer(BaseHTTPRequestHandler):
                 self.response(message=f.read())
 
     def do_POST(self):
+        """
+        Start the get-build-log chain when receiving a post request from github webhooks
+        """
         CI = CIServerHelper()
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
@@ -66,6 +77,9 @@ class CIServer(BaseHTTPRequestHandler):
 
 class CIServerHelper:
     def parse_header(self, header):
+        """
+        Parsing of http header
+        """
         if 'X-Github-Event' in header:
             event = header['X-Github-Event']
         else:
@@ -73,8 +87,10 @@ class CIServerHelper:
         return event
 
     def clone_repo(self, clone_url, branch, repo_name):
-        # Function to clone a repo to the server, or fetch if the repo
-        # is already present locally.
+        """
+        Clones a repo specified in webhook payload to the server, or fetch if the repo
+        is already present locally
+        """
         dir_name = os.path.dirname(os.path.realpath(__file__))
         new_dir = "CI-clonedir/" + repo_name
         repo_path = os.path.join(dir_name, new_dir)
@@ -245,6 +261,9 @@ class CIServerHelper:
 
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
+    """
+    Initialize server
+    """
     server_address = ('', port)
     server = server_class(server_address, handler_class)
     print("Starting server\n")

@@ -50,9 +50,7 @@ class CIServer(BaseHTTPRequestHandler):
             with open(self.path.replace("/", "", 1)) as f:
                 self.response(message=f.read())
         elif re.match(r'^/die', self.path):
-            with open('token.yml') as fin:
-                data = yaml.load(fin, Loader=yaml.FullLoader)
-            token = data["TOKEN"]
+            token = read_token()
             g = re.search(r'/die\?auth=(.*)', self.path).groups()[0]
             if g == token:
                 self.response(message="Shutting down server")
@@ -138,8 +136,9 @@ class CIServerHelper:
 
         f = open(log_file, 'w')
 
-        br_scrubbed = re.sub(r'\?auth=.*', '?auth=REDACTED', build_result[1])
-        tr_scrubbed = re.sub(r'\?auth=.*', '?auth=REDACTED', test_result[1])
+        token = read_token()
+        br_scrubbed = re.sub(token, 'REDACTED', build_result[1])
+        tr_scrubbed = re.sub(token, 'REDACTED', test_result[1])
         f.write("Log from " + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n\n")
         if build_result[0]:
             f.write("Lint and build successful!\n\n")
@@ -172,9 +171,7 @@ class CIServerHelper:
         # owner and repo is already set, therefore we set sha here
         statuses_url = statuses_url.format(sha=commit_id)
         # Token, fetch from local YML-file
-        with open('token.yml') as fin:
-            data = yaml.load(fin, Loader=yaml.FullLoader)
-        token = data["TOKEN"]
+        token = read_token()
 
         build_and_test = "failure"
         if build_result[0] and test_result[0]:
@@ -294,6 +291,10 @@ class CIServerHelper:
 
         return True, "Good News: All is Fine."
 
+def read_token():
+    with open('token.yml') as fin:
+        data = yaml.load(fin, Loader=yaml.FullLoader)
+    return data["TOKEN"]
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
     """

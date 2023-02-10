@@ -5,8 +5,6 @@ from threading import Thread, Event
 import os
 import shutil
 from time import sleep
-import git
-from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
 class StoppableThread(Thread):
@@ -42,7 +40,7 @@ class CIServerTest(unittest.TestCase):
     
     def test_header_no_event(self):
         """
-        Test case to see if parsing header works as expected when tag is missing
+        Test case to see if parsing header works as expected when tag missing
         Expected response is 'Unknown event'
         """
         server = CI_server.CIServerHelper()
@@ -83,9 +81,9 @@ class CIServerTest(unittest.TestCase):
     def test_clone_repo_branch(self):
 
         """
-        Test case to see if cloning repo and switching branch works as expected.
-        Expected outcome is to see that a file that only exists in a specific branch
-        can be found locally after the function is run.
+        Test to see if cloning repo and switching branch works as expected.
+        Expected outcome is to see that a file that only exists in a specific
+        branch can be found locally after the function is run.
         """
         server = CI_server.CIServerHelper()
         clone_url = "https://github.com/githubtraining/hellogitworld.git"
@@ -101,10 +99,11 @@ class CIServerTest(unittest.TestCase):
     def test_log_results_failed_build(self):
         """
         Test if failed builds log correctly.
-        Expected outcome is that there is a file in "results/owner/repo/commithash"
+        Expected outcome is that there is a file in "results/owner/repo/SHA"
         with the results of the build.
         """
-        log_path = "results/githubtraining/hellogitworld/cb2d322bee073327e058143329d200024bd6b4c6"
+        log_path = "results/githubtraining/hellogitworld/" +\
+                   "cb2d322bee073327e058143329d200024bd6b4c6"
         if os.path.exists(log_path):
             os.remove(log_path)
 
@@ -125,7 +124,8 @@ class CIServerTest(unittest.TestCase):
         Starts the server and sends a GET request to it.
         Expected outcome is that the file contains the specified text.
         """
-        log_path = "results/githubtraining/hellogitworld/8d2636da55da593c421e1cb09eea502a05556a69"
+        log_path = "results/githubtraining/hellogitworld/" +\
+                   "8d2636da55da593c421e1cb09eea502a05556a69"
         server_thread = StoppableThread(target=CI_server.main)
         server_thread.start()
         sleep(1)

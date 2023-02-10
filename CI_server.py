@@ -144,12 +144,13 @@ class CIServerHelper:
         f.close()
 
         # build URL
-        with open('token.yml') as fin:
+        with open('config.yml') as fin:
             data = yaml.load(fin, Loader=yaml.FullLoader)
-        url = "http://" + data["HOSTNAME"] + ":" + data["PORT"] + "/" + log_file
+        url = "http://" + data["HOSTNAME"] + ":" + str(data["PORT"]) + "/" + log_file
         return url
 
-    def send_results(self, commit_id, build_result, test_result, statuses_url, target_url):
+    def send_results(self, commit_id, build_result, test_result,
+                     statuses_url, target_url):
         """
         Set the commit status on Github for commit_id
         according to build_result and test_result

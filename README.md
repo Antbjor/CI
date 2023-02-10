@@ -16,6 +16,11 @@ To run all the test cases existing in `CI_server_test.py` on the code, run `pyth
 
 To run a specific test case existing in `CI_server_test.py` on the code, run `python3 -m unittest CI_server_test.CIServerTest.test_name` from the main directory, replacing test_name with the name of the test (the function to be run).
 
+### Requirements
+The requirements for the project can be found in requirements.txt.
+
+To install the requirements, run `pip install -r requirements.txt`
+
 ### Running
 To start the server the command `python3 CI_server.py` can be run. The webhooks of this repository is delivered to 'http://sunasuna.mooo.com/' on port '1337'. Therefore one needs access to that server, and from there run this CI-server to test it out.
 

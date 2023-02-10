@@ -138,19 +138,21 @@ class CIServerHelper:
 
         f = open(log_file, 'w')
 
+        br_scrubbed = re.sub(r'\?auth=.*', '?auth=REDACTED', build_result[1])
+        tr_scrubbed = re.sub(r'\?auth=.*', '?auth=REDACTED', test_result[1])
         f.write("Log from " + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n\n")
         if build_result[0]:
             f.write("Lint or build successful!\n\n")
         else:
             f.write("Lint or build failed!\n\n")
-        f.write(f"Message:\n{build_result[1]}\n")
+        f.write(f"Message:\n{br_scrubbed}\n")
         f.write("\n----\n")
 
         if test_result[0]:
             f.write("Tests successful!\n\n")
         else:
             f.write("Tests failed!\n\n")
-        f.write(f"Message:\n{test_result[1]}\n")
+        f.write(f"Message:\n{tr_scrubbed[1]}\n")
         f.close()
 
         # build URL

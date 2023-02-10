@@ -37,6 +37,14 @@ in the Github Docs.
 The body of the request is a JSON object. The documentation for what it
 contains can be found at the above URL.
 
+### Browsable HTML documentation
+To generate browsable html documentation use the following pdoc3 commands:
+- (**pip install pdoc3** to install the tool)
+- **pdoc --html \<filename\>**
+  or 
+- **pdoc --html \<filename\> --force** to overwrite an existing html file
+
+
 ### Notification implementation and testing
 The CI server sets the commit status on the respository when a push occurs. This is achieved by using the above mentioned webhooks, retrieving and parse the payload on our server and lastly send a request with the correct header and payload to the url of the commit. In the sent payload we include the 'state'-tag, which basically is linked to a variable that either is "success" or "failure" depending on the state of the build result and test results that we run automatically. Every component of this feature has been tested by various testcases, as well as the communication to GitHub (Sending a response from the server with the current event, commit-id and repository url which can be seen on GitHub as a response-message). 
 

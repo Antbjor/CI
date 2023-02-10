@@ -75,7 +75,7 @@ class CIServerTest(unittest.TestCase):
         server = CI_server.CIServerHelper()
         clone_url = "https://github.com/githubtraining/hellogitworld.git"
         branch = "master"
-        repo_name = "CI"
+        repo_name = "hellogitworld"
         repo_path = server.clone_repo(clone_url, branch, repo_name).working_dir
 
         self.assertTrue(os.path.exists(repo_path))
@@ -91,7 +91,7 @@ class CIServerTest(unittest.TestCase):
         server = CI_server.CIServerHelper()
         clone_url = "https://github.com/githubtraining/hellogitworld.git"
         branch = "gh-pages"
-        repo_name = "CI"
+        repo_name = "hellogitworld"
         repo_path = server.clone_repo(clone_url, branch, repo_name).working_dir
         file_path = repo_path + "/index.html"
 

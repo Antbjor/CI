@@ -9,6 +9,8 @@ No security checks are performed.
 ### Build list
 A directory is created, called results + the name of the respository. In this directory, log files are created after each build and test.
 
+The list can be found at http://sunasuna.mooo.com:1337/results.
+
 ### Testing
 The file `CI_server_test.py` contains various tests that can be run.
 

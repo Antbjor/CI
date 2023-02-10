@@ -6,8 +6,8 @@ Part of the course DD2480 &ndash; Software Engineering Fundamentals at KTH
 A simple CI server. This project is not suitable for use in production.
 No security checks are performed.
 
-### Building
-TODO
+### Build list
+A directory is created, called results + the name of the respository. In this directory, log files are created after each build and test.
 
 ### Testing
 The file `CI_server_test.py` contains various tests that can be run.
@@ -17,7 +17,7 @@ To run all the test cases existing in `CI_server_test.py` on the code, run `pyth
 To run a specific test case existing in `CI_server_test.py` on the code, run `python3 -m unittest CI_server_test.CIServerTest.test_name` from the main directory, replacing test_name with the name of the test (the function to be run).
 
 ### Running
-TODO
+To start the server the command `python3 CI_server.py` can be run. The webhooks of this repository is delivered to 'http://sunasuna.mooo.com/' on port '1337'. Therefore one needs access to that server, and from there run this CI-server to test it out.
 
 ### Github webhook documentation
 Github sends a HTTP POST request to the URL specified in the repo settings.
@@ -30,7 +30,8 @@ in the Github Docs.
 The body of the request is a JSON object. The documentation for what it
 contains can be found at the above URL.
 
-### How notification has been implemented and tested
+### Notification implementation and testing
+The CI server sets the commit status on the respository when a push occurs. This is achieved by using the above mentioned webhooks, retrieving and parse the payload on our server and lastly send a request with the correct header and payload to the url of the commit. In the sent payload we include the 'state'-tag, which basically is linked to a variable that either is "success" or "failure" depending on the state of the build result and test results that we run automatically. Every component of this feature has been tested by various testcases, as well as the communication to GitHub (Sending a response from the server with the current event, commit-id and repository url which can be seen on GitHub as a response-message). 
 
 
 ### Way of working according to Essence
@@ -39,11 +40,11 @@ Our team is currently in the "Collaborating" state. The team members are working
 ### Statement of contributions
 Patrik Kinnunen: Wrote the base-code for the server as well as the testing for it. Did work on the README. Helped with the functionality to send results of the testing/building to github.
 
-Adam Genell:
+Adam Genell: Worked on the functionality to log the results of the testing/building in a separate file. Wrote parts of the README and did some cleanup on the code. Also helped the other members of the team with their tasks.
 
-Anton Björklund:
+Anton Björklund: Worked on the functionality to clone a git repository. 
 
-Wenqi Cao: 
+Wenqi Cao: Wrote functionality to build/perform static syntax on the code and to test the code. 
 
 ### License
 The project is available under the MIT license. See the LICENSE file for more info.

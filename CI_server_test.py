@@ -5,6 +5,7 @@ from threading import Thread, Event
 import os
 import shutil
 from time import sleep
+import yaml
 
 
 class StoppableThread(Thread):
@@ -30,13 +31,17 @@ class CIServerTest(unittest.TestCase):
         Expected response is Default
         """
         # Start server on its own thread
-        server_thread = StoppableThread(target=CI_server.main)
+        server_thread = StoppableThread(target=CI_server.run)
         server_thread.start()
         sleep(1)
-        r = requests.get('http://127.0.0.1:1337/')
+        r = requests.get('http://127.0.0.1:8030/')
         self.assertEqual(r.text, "Default")
-        # Stop/Close the thread
-        server_thread.stop()
+
+        # Stop server
+        with open('token.yml') as fin:
+            data = yaml.load(fin, Loader=yaml.FullLoader)
+        token = data["TOKEN"]
+        requests.get(f'http://127.0.0.1:8030/die?auth={token}')
     
     def test_header_no_event(self):
         """
@@ -126,15 +131,21 @@ class CIServerTest(unittest.TestCase):
         """
         log_path = "results/githubtraining/hellogitworld/" +\
                    "8d2636da55da593c421e1cb09eea502a05556a69"
-        server_thread = StoppableThread(target=CI_server.main)
+        server_thread = StoppableThread(target=CI_server.run)
         server_thread.start()
         sleep(1)
         f = open(log_path, 'w')
         f.write("TEST FILE")
         f.close()
-        r = requests.get(f'http://127.0.0.1:1337/{log_path}')
+        r = requests.get(f'http://127.0.0.1:8030/{log_path}')
         self.assertEqual(r.text, "TEST FILE")
-        # server_thread.stop()
+
+        # Stop server
+        with open('token.yml') as fin:
+            data = yaml.load(fin, Loader=yaml.FullLoader)
+        token = data["TOKEN"]
+        requests.get(f'http://127.0.0.1:8030/die?auth={token}')
+
 
 
 if __name__ == '__main__':

@@ -19,6 +19,7 @@ class CIServer(BaseHTTPRequestHandler):
                  server: socketserver.BaseServer):
         super().__init__(request, client_address, server)
         self.payload = []
+        self.token = ''
 
     def response(self, message="Default", content_type="text/plain"):
         """
@@ -49,6 +50,14 @@ class CIServer(BaseHTTPRequestHandler):
         elif re.fullmatch(r'/results/.*', self.path):
             with open(self.path.replace("/", "", 1)) as f:
                 self.response(message=f.read())
+        elif re.match(r'^/die', self.path):
+            with open('token.yml') as fin:
+                data = yaml.load(fin, Loader=yaml.FullLoader)
+            token = data["TOKEN"]
+            g = re.search(r'/die\?auth=(.*)', self.path).groups()[0]
+            if g == token:
+                self.response(message="Shutting down server")
+                raise KeyboardInterrupt
 
     def do_POST(self):
         """

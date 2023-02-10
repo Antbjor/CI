@@ -75,8 +75,8 @@ class CIServer(BaseHTTPRequestHandler):
             test_result = CI.ci_test(repo)
         repo_full_name = self.payload["repository"]["full_name"]
         statuses_url = self.payload["repository"]["statuses_url"]
-        CI.log_results(repo_full_name, commit_id, build_result, test_result)
-        CI.send_results(commit_id, build_result, test_result, statuses_url)
+        target_url = CI.log_results(repo_full_name, commit_id, build_result, test_result)
+        CI.send_results(commit_id, build_result, test_result, statuses_url, target_url)
 
 
 class CIServerHelper:
@@ -119,6 +119,7 @@ class CIServerHelper:
     def log_results(self, name, commit_id, build_result, test_result):
         """
         Log the results of build_result and test_result to persistent storage
+        Returns the URL to view the results.
         """
         log_dir = os.path.join('results', name)
         if not os.path.exists(log_dir):
@@ -142,7 +143,13 @@ class CIServerHelper:
         f.write(f"Message:\n{test_result[1]}\n")
         f.close()
 
-    def send_results(self, commit_id, build_result, test_result, statuses_url):
+        # build URL
+        with open('token.yml') as fin:
+            data = yaml.load(fin, Loader=yaml.FullLoader)
+        url = "http://" + data["HOSTNAME"] + ":" + data["PORT"] + "/" + log_file
+        return url
+
+    def send_results(self, commit_id, build_result, test_result, statuses_url, target_url):
         """
         Set the commit status on Github for commit_id
         according to build_result and test_result
@@ -165,7 +172,8 @@ class CIServerHelper:
                    "X-GitHub-Api-Version": "2022-11-28"}
         payload = {"state": build_and_test,
                    "description": "Build succeeded " + str(build_result[0]) +
-                                  " Test succeeded " + str(test_result[0])}
+                                  " Test succeeded " + str(test_result[0]),
+                   "target_url": target_url}
 
         # TODO: complete feature after log_results
         requests.post(url=statuses_url, headers=headers, json=payload)

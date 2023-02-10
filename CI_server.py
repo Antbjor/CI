@@ -151,7 +151,7 @@ class CIServerHelper:
             f.write("Tests successful!\n\n")
         else:
             f.write("Tests failed!\n\n")
-        f.write(f"Message:\n{tr_scrubbed[1]}\n")
+        f.write(f"Message:\n{tr_scrubbed}\n")
         f.close()
 
         # build URL
@@ -291,10 +291,12 @@ class CIServerHelper:
 
         return True, "Good News: All is Fine."
 
+
 def read_token():
     with open('token.yml') as fin:
         data = yaml.load(fin, Loader=yaml.FullLoader)
     return data["TOKEN"]
+
 
 def run(server_class=HTTPServer, handler_class=CIServer, port=8030):
     """

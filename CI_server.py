@@ -31,9 +31,8 @@ class CIServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
         """
-        Handles incoming POST requests.
-        Receives the payload from Github and extracts relevant information.
-        Calls the main CI functions using this information.
+        Handles incoming GET requests.
+        Lists the build results in HTML format with links to each result.
         """
         print(self.headers)
         if self.path == '/':
@@ -53,7 +52,9 @@ class CIServer(BaseHTTPRequestHandler):
 
     def do_POST(self):
         """
-        Start the get-build-log chain when receiving a post request from github webhooks
+        Handles incoming POST requests.
+        Receives the payload from Github and extracts relevant information.
+        Calls the main CI functions using this information.
         """
         CI = CIServerHelper()
         content_length = int(self.headers['Content-Length'])

@@ -239,6 +239,8 @@ class CIServerHelper:
         with open(path) as fin:
             work = yaml.load(fin, Loader=yaml.FullLoader)
 
+        os.chdir(repo.working_dir)
+
         # Find the jobs to be executed
         for job in work["jobs"]:
             # Skip the build part

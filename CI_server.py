@@ -224,7 +224,6 @@ class CIServerHelper:
                     print(result.stdout)
                     # Return at once if build fails
                     if result.stderr != "":
-                        print("!!!!!!!!!!!!!!!TESTS FAILED!!!!!!!!!!!!!!!!!!")
                         return False, result.stderr
             else:
                 print("ERROR:", "Unrecognized job name!", file=sys.stderr)
@@ -270,6 +269,7 @@ class CIServerHelper:
                     print(result.stdout)
                     # Return at once if build fails (E: File Error F: Failed)
                     if result.returncode != 0:
+                        print("!!!!!!!!!!!!!!!TESTS FAILED!!!!!!!!!!!!!!!!!!")
                         return False, result.stderr
             elif job["name"] == 'Install dependencies':
                 for task in tasks:

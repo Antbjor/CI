@@ -266,8 +266,9 @@ class CIServerHelper:
                                             stdout=subprocess.PIPE,
                                             stderr=subprocess.PIPE)
                     # Print the output of the shell commands
-                    print(result.stdout)
+                    # print(result.stdout)
                     # Return at once if build fails (E: File Error F: Failed)
+                    print(result.stderr)
                     print("!!!!!!!!!!!!!!!!! RETURN CODE:", result.returncode)
                     if result.returncode != 0:
                         print("!!!!!!!!!!!!!!!TESTS FAILED!!!!!!!!!!!!!!!!!!")

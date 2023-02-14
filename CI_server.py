@@ -268,6 +268,7 @@ class CIServerHelper:
                     # Print the output of the shell commands
                     print(result.stdout)
                     # Return at once if build fails (E: File Error F: Failed)
+                    print("!!!!!!!!!!!!!!!!! RETURN CODE:", result.returncode)
                     if result.returncode != 0:
                         print("!!!!!!!!!!!!!!!TESTS FAILED!!!!!!!!!!!!!!!!!!")
                         return False, result.stderr

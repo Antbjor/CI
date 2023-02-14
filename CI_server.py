@@ -239,6 +239,7 @@ class CIServerHelper:
         with open(path) as fin:
             work = yaml.load(fin, Loader=yaml.FullLoader)
 
+        main_dir = os.getcwd()
         os.chdir(repo.working_dir)
 
         # Find the jobs to be executed
@@ -286,6 +287,7 @@ class CIServerHelper:
             else:
                 print("ERROR:", "Unrecognized job name!", file=sys.stderr)
 
+        os.chdir(main_dir)
         return True, "Good News: All is Fine."
 
 

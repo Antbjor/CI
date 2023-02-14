@@ -36,7 +36,7 @@ class CIServerTest(unittest.TestCase):
         server_thread.start()
         sleep(1)
         r = requests.get('http://127.0.0.1:8030/')
-        self.assertEqual(r.text, "Default")
+        self.assertEqual(r.text, "Normal")
 
         # Stop server
         with open('token.yml') as fin:

@@ -61,6 +61,7 @@ Adam Genell: Worked on the functionality to log the results of the testing/build
 
 Anton Björklund: Worked on the functionality to clone a git repository. 
 
+
 Wenqi Cao: Wrote functionality to build/perform static syntax on the code and to test/build the code. 
 
 ### License

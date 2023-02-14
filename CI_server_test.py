@@ -36,7 +36,7 @@ class CIServerTest(unittest.TestCase):
         server_thread.start()
         sleep(1)
         r = requests.get('http://127.0.0.1:8030/')
-        self.assertEqual(r.text, "Normal")
+        self.assertEqual(r.text, "Default")
 
         # Stop server
         with open('token.yml') as fin:
@@ -64,7 +64,7 @@ class CIServerTest(unittest.TestCase):
         header = {"X-Github-Event": "push", "X-GitHub-Hook-ID": "399544828"}
         event = server.parse_header(header)
 
-        self.assertEqual(event, "pull")
+        self.assertEqual(event, "push")
 
     def test_clone_repo(self):
         """

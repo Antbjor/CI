@@ -215,6 +215,7 @@ class CIServerHelper:
                     # Return at once if build fails
                     # (ruff print the error message in stdout)
                     if result.stdout != "":
+                        os.chdir(main_dir)
                         return False, result.stdout
             elif (job["name"] == 'Build project'
                   or job["name"] == 'Install dependencies'):
@@ -227,6 +228,7 @@ class CIServerHelper:
                     print(result.stdout)
                     # Return at once if build fails
                     if result.stderr != "":
+                        os.chdir(main_dir)
                         return False, result.stderr
             else:
                 print("ERROR:", "Unrecognized job name!", file=sys.stderr)
@@ -265,6 +267,7 @@ class CIServerHelper:
                                             stderr=subprocess.PIPE)
                     # Return at once if build fails
                     if result.stdout != "":
+                        os.chdir(main_dir)
                         return False, result.stdout
             elif job["name"] == 'Run tests':
                 for task in tasks:
@@ -276,6 +279,7 @@ class CIServerHelper:
                     print(result.stdout)
                     # Return at once if build fails (E: File Error F: Failed)
                     if result.returncode != 0:
+                        os.chdir(main_dir)
                         return False, result.stderr
             elif job["name"] == 'Install dependencies':
                 for task in tasks:
@@ -287,6 +291,7 @@ class CIServerHelper:
                     print(result.stdout)
                     # Return at once if build fails
                     if result.stderr != "":
+                        os.chdir(main_dir)
                         return False, result.stderr
             else:
                 print("ERROR:", "Unrecognized job name!", file=sys.stderr)

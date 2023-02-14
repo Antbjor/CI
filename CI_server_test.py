@@ -64,7 +64,7 @@ class CIServerTest(unittest.TestCase):
         header = {"X-Github-Event": "push", "X-GitHub-Hook-ID": "399544828"}
         event = server.parse_header(header)
 
-        self.assertEqual(event, "push")
+        self.assertEqual(event, "pull")
 
     def test_clone_repo(self):
         """

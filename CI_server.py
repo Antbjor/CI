@@ -268,7 +268,7 @@ class CIServerHelper:
                     # Print the output of the shell commands
                     print(result.stdout)
                     # Return at once if build fails (E: File Error F: Failed)
-                    if result.stderr[0] == 'E' or result.stderr[0] == 'F':
+                    if result.returncode != 0:
                         return False, result.stderr
             elif job["name"] == 'Install dependencies':
                 for task in tasks:

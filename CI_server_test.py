@@ -53,7 +53,7 @@ class CIServerTest(unittest.TestCase):
         header = {"X-GitHub-Hook-ID": "399544828"}
         event = server.parse_header(header)
 
-        self.assertEqual(event, "Unknown event??")
+        self.assertEqual(event, "Unknown event")
 
     def test_header_event(self):
         """

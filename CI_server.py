@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 import re
 import git
@@ -107,17 +108,11 @@ class CIServerHelper:
         new_dir = "CI-clonedir/" + repo_name
         repo_path = os.path.join(dir_name, new_dir)
 
-        # Check for existing repo
-        try:
-            repo = git.Repo(repo_path)
-        except(git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
-            repo = None
-        # Fetch if repo exists, or create directory and clone to it if not.
-        if repo is not None:
-            repo.remotes.origin.fetch()
-        else:
-            git.Repo.clone_from(clone_url, repo_path)
-            repo = git.Repo(repo_path)
+        # Check for existing repo and delete if it exists
+        if os.path.exists(repo_path):
+            shutil.rmtree(repo_path)
+        git.Repo.clone_from(clone_url, repo_path)
+        repo = git.Repo(repo_path)
 
         # Check out branch specified in webhook payload.
         repo.git.checkout(branch)
